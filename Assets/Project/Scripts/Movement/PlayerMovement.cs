@@ -136,6 +136,7 @@ namespace ReGaSLZR.Dare.Movement
         private void OnEnable()
         {
             this.FixedUpdateAsObservable()
+                .Where(_ => playerStatusGetter.IsOnGround().Value)
                 .Select(_ => HasMovementInput())
                 .Subscribe(isMoving => OnMove(isMoving, speedWalk))
                 .AddTo(disposable);
@@ -175,6 +176,8 @@ namespace ReGaSLZR.Dare.Movement
 
         private void OnGround(bool isOnGround)
         {
+            playerStatusSetter.SetIsOnGround(isOnGround);
+
             if (!isOnGround)
             {
                 animator.SetTrigger(animTriggerFall);

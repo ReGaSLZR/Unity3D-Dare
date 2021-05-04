@@ -1,4 +1,4 @@
-namespace ReGaSLZR.Dare.Movement
+namespace ReGaSLZR.Dare.Action
 {
 
     using Dare.Detector;

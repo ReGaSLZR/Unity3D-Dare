@@ -13,7 +13,7 @@ namespace ReGaSLZR.Dare.Camera
     {
 
         [Inject]
-        private PlayerStatusGetter playerStatus;
+        private IPlayerStatusGetter playerStatus;
 
         private CompositeDisposable disposable = new CompositeDisposable();
 

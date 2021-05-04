@@ -27,8 +27,8 @@ namespace ReGaSLZR.Dare.Injector
 
         private void Inject()
         {
-            Container.Bind<PlayerStatusGetter>().FromInstance(playerStatus);
-            Container.Bind<PlayerStatusSetter>().FromInstance(playerStatus);
+            Container.Bind<IPlayerStatusGetter>().FromInstance(playerStatus);
+            Container.Bind<IPlayerStatusSetter>().FromInstance(playerStatus);
         }
 
         #endregion

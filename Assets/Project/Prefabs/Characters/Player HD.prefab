@@ -1113,6 +1113,8 @@ MonoBehaviour:
   animTriggerText: TriggerText
   animTriggerUnText: TriggerUnText
   animTriggerPickUp: TriggerPickUp
+  animTriggerStagger: TriggerStagger
+  animTriggerDie: TriggerDie
   animFloatSpeed: movementSpeed
   speedRotation: 0.2
   speedCrouch: 1.35

@@ -69,3 +69,11 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+#Custom gitignore entries by Ren
+/[Aa]ssets/CC_Assets/
+/[Aa]ssets/Editor/
+/[Aa]ssets/Mixamo/
+/[Aa]ssets/NaughtyAttributes/
+/[Aa]ssets/Plugins/
+/[Aa]ssets/Toby Fredson/

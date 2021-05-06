@@ -4,6 +4,7 @@ namespace ReGaSLZR.Dare.View
     using Dare.Model.Status;
 
     using NaughtyAttributes;
+    using System.Collections;
     using UniRx;
     using UnityEngine;
     using UnityEngine.UI;
@@ -23,6 +24,8 @@ namespace ReGaSLZR.Dare.View
 
         #region Inspector Variables
 
+        [Header("Sliders")]
+
         [SerializeField]
         [Required]
         private Slider sliderHealth;
@@ -31,11 +34,25 @@ namespace ReGaSLZR.Dare.View
 
         [SerializeField]
         [Required]
-        private Animation animOverlayOnStagger;
+        private Graphic overlayOnStagger;
 
         [SerializeField]
         [Required]
-        private Image overlayOnCrouch;
+        private Graphic overlayOnCrouch;
+
+        [Header("Configuration")]
+
+        [SerializeField]
+        [Range(0.1f, 5f)]
+        private float durationCrouchOverlay = 1f;
+
+        [SerializeField]
+        [Range(0.1f, 5f)]
+        private float durationStaggerOverlay = 1f;
+
+        [SerializeField]
+        [Range(0.1f, 1f)]
+        private float alphaStaggerMax = 0.5f;
 
         #endregion
 
@@ -46,7 +63,7 @@ namespace ReGaSLZR.Dare.View
             playerStatus.IsCrouching()
                 .Subscribe(isCrouching => 
                     overlayOnCrouch.CrossFadeAlpha(
-                        isCrouching ? 1 : 0f, 1f, false))
+                        isCrouching ? 1f : 0f, durationCrouchOverlay, false))
                 .AddTo(disposables);
 
             playerStatus.Health()
@@ -55,13 +72,15 @@ namespace ReGaSLZR.Dare.View
 
             playerStatus.OnTakeDamage()
                 .Where(hasTakenDamage => hasTakenDamage)
-                .Subscribe(_ => OnHealthDecrease())
+                .Subscribe(_ => StartCoroutine(CorOnHealthDecrease()))
                 .AddTo(disposables);
 
             playerStatus.Health()
                 .Where(health => health <= 0)
-                .Subscribe(_ => OnHealthDecrease())
+                .Subscribe(_ => StartCoroutine(CorOnHealthDecrease()))
                 .AddTo(disposables);
+
+            ResetOverlaysAlpha();
         }
 
         private void OnDisable()
@@ -73,10 +92,21 @@ namespace ReGaSLZR.Dare.View
 
         #region Class Implementation
 
-        private void OnHealthDecrease()
+        private void ResetOverlaysAlpha()
         {
-            animOverlayOnStagger.gameObject.SetActive(true);
-            animOverlayOnStagger.Play();
+            overlayOnCrouch.CrossFadeAlpha(0f, 0f, false);
+            overlayOnStagger.CrossFadeAlpha(0f, 0f, false);
+        }
+
+        private IEnumerator CorOnHealthDecrease()
+        {
+            overlayOnStagger.CrossFadeAlpha(0f, 0f, true);
+            overlayOnStagger.CrossFadeAlpha(alphaStaggerMax, 
+                durationStaggerOverlay / 2, true);
+            yield return new WaitForSeconds(
+                durationStaggerOverlay / 2);
+            overlayOnStagger.CrossFadeAlpha(0f, 
+                durationStaggerOverlay / 2, true);
         }
 
         #endregion

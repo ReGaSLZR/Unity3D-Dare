@@ -93,6 +93,7 @@ namespace ReGaSLZR.Dare.Model.Status
                 health.Value - damage, 0, HEALTH_MAX);
             hasTakenDamage.SetValueAndForceNotify(
                 (health.Value < 100) && (health.Value > 0));
+            isCrouching.SetValueAndForceNotify(false);
         }
 
         #endregion

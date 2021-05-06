@@ -1757,26 +1757,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 139159116738045284, guid: f4759cb358079294ba9fa7677143bf47,
-        type: 3}
-      propertyPath: m_Name
-      value: PanelStagger
-      objectReference: {fileID: 0}
-    - target: {fileID: 139159116738045284, guid: f4759cb358079294ba9fa7677143bf47,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1550974619696297591, guid: f4759cb358079294ba9fa7677143bf47,
-        type: 3}
-      propertyPath: m_Color.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1550974619696297591, guid: f4759cb358079294ba9fa7677143bf47,
-        type: 3}
-      propertyPath: m_Maskable
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1837205748473490486, guid: f4759cb358079294ba9fa7677143bf47,
         type: 3}
       propertyPath: m_RootOrder
@@ -1832,123 +1812,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3544596350450196261, guid: f4759cb358079294ba9fa7677143bf47,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3544596350450196261, guid: f4759cb358079294ba9fa7677143bf47,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3544596350450196261, guid: f4759cb358079294ba9fa7677143bf47,
-        type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4198636478582109462, guid: f4759cb358079294ba9fa7677143bf47,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4198636478582109462, guid: f4759cb358079294ba9fa7677143bf47,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5259996882570359899, guid: f4759cb358079294ba9fa7677143bf47,
-        type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5259996882570359899, guid: f4759cb358079294ba9fa7677143bf47,
-        type: 3}
-      propertyPath: m_Color.a
-      value: 0.53333336
-      objectReference: {fileID: 0}
-    - target: {fileID: 5259996882570359899, guid: f4759cb358079294ba9fa7677143bf47,
-        type: 3}
-      propertyPath: m_Color.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5259996882570359899, guid: f4759cb358079294ba9fa7677143bf47,
-        type: 3}
-      propertyPath: m_Color.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5259996882570359899, guid: f4759cb358079294ba9fa7677143bf47,
-        type: 3}
-      propertyPath: m_Color.r
-      value: 0.6509434
-      objectReference: {fileID: 0}
-    - target: {fileID: 5259996882570359899, guid: f4759cb358079294ba9fa7677143bf47,
-        type: 3}
-      propertyPath: m_Maskable
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5638625105108365771, guid: f4759cb358079294ba9fa7677143bf47,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5638625105108365771, guid: f4759cb358079294ba9fa7677143bf47,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5638625105108365771, guid: f4759cb358079294ba9fa7677143bf47,
-        type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7567343399897413504, guid: f4759cb358079294ba9fa7677143bf47,
-        type: 3}
-      propertyPath: alphaStaggerMax
-      value: 0.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 7567343399897413504, guid: f4759cb358079294ba9fa7677143bf47,
-        type: 3}
-      propertyPath: overlayOnStagger
-      value: 
-      objectReference: {fileID: 3225774985994141688}
-    - target: {fileID: 7567343399897413504, guid: f4759cb358079294ba9fa7677143bf47,
-        type: 3}
-      propertyPath: durationCrouchOverlay
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7567343399897413504, guid: f4759cb358079294ba9fa7677143bf47,
-        type: 3}
-      propertyPath: durationStaggerOverlay
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7706318760051115700, guid: f4759cb358079294ba9fa7677143bf47,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7706318760051115700, guid: f4759cb358079294ba9fa7677143bf47,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8372492195141738105, guid: f4759cb358079294ba9fa7677143bf47,
         type: 3}
       propertyPath: m_Name
       value: Canvas y EventSystem
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 4738418754486281211, guid: f4759cb358079294ba9fa7677143bf47, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f4759cb358079294ba9fa7677143bf47, type: 3}
---- !u!114 &3225774985994141688 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5259996882570359899, guid: f4759cb358079294ba9fa7677143bf47,
-    type: 3}
-  m_PrefabInstance: {fileID: 3225774985994141687}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

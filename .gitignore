@@ -73,6 +73,7 @@ crashlytics-build.properties
 #Custom gitignore entries by Ren
 /[Aa]ssets/CC_Assets/
 /[Aa]ssets/Editor/
+/[Aa]ssets/JMO Assets/
 /[Aa]ssets/Mixamo/
 /[Aa]ssets/NaughtyAttributes/
 /[Aa]ssets/Plugins/

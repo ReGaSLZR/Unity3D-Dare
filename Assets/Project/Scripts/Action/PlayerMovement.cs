@@ -2,7 +2,7 @@ namespace ReGaSLZR.Dare.Action
 {
 
     using Dare.Detector;
-    using Dare.Model.Status;
+    using Dare.Model.Player;
 
     using NaughtyAttributes;
     using UnityEngine;

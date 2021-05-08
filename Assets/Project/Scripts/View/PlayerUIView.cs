@@ -1,7 +1,7 @@
 namespace ReGaSLZR.Dare.View
 {
 
-    using Dare.Model.Status;
+    using Dare.Model.Player;
 
     using NaughtyAttributes;
     using System.Collections;

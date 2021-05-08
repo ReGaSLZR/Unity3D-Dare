@@ -2143,7 +2143,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e20a9ec1e32c6840bdc7934c7234df5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  staminaTick: 0.05
+  staminaRunTick: 0.025
+  staminaShieldTick: 0.005
+  staminaRefillTick: 0.15
   debugDamage: 25
 --- !u!1 &2594030513372557357
 GameObject:

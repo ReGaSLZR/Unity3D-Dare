@@ -1,4 +1,4 @@
-namespace ReGaSLZR.Dare.Model.Status
+namespace ReGaSLZR.Dare.Model.Player
 {
 
     using NaughtyAttributes;
@@ -7,18 +7,29 @@ namespace ReGaSLZR.Dare.Model.Status
 
     #region Interfaces
 
+    public interface IPlayerSkillGetter
+    {
+        public IReadOnlyReactiveProperty<bool> IsShielding();
+    }
+
+    public interface IPlayerSkillSetter
+    {
+        public void ToggleShielding();
+    }
+
     public interface IPlayerStatusGetter
     {
 
         public int GetMaxHealth();
         public int GetMaxStamina();
+        public int GetCriticalStamina();
+        public IReadOnlyReactiveProperty<int> Health();
+        public IReadOnlyReactiveProperty<int> Stamina();
+        
         public IReadOnlyReactiveProperty<bool> IsRunning();
         public IReadOnlyReactiveProperty<bool> IsOnGround();
         public IReadOnlyReactiveProperty<bool> IsCrouching();
         public IReadOnlyReactiveProperty<bool> OnTakeDamage();
-        public IReadOnlyReactiveProperty<int> Health();
-        public IReadOnlyReactiveProperty<int> Stamina();
-        public int GetCriticalStamina();
 
     }
 
@@ -35,14 +46,19 @@ namespace ReGaSLZR.Dare.Model.Status
     #endregion
 
     public class PlayerStatus : MonoBehaviour, 
-        IPlayerStatusGetter, IPlayerStatusSetter
+        IPlayerStatusGetter, IPlayerStatusSetter, 
+        IPlayerSkillGetter, IPlayerSkillSetter
     {
 
         #region Inspector Variables
 
         [SerializeField]
-        [Range(0.01f, 0.25f)]
+        [Range(0.001f, 0.25f)]
         private float staminaRunTick = 0.25f;
+
+        [SerializeField]
+        [Range(0.001f, 0.25f)]
+        private float staminaShieldTick = 0.005f;
 
         [SerializeField]
         [Range(0.01f, 0.25f)]
@@ -72,6 +88,9 @@ namespace ReGaSLZR.Dare.Model.Status
         private ReactiveProperty<bool> isRunning = new ReactiveProperty<bool>(false);
         private ReactiveProperty<bool> isCrouching = new ReactiveProperty<bool>(false);
 
+        //Skills
+        private ReactiveProperty<bool> isShielding = new ReactiveProperty<bool>(false);
+
         #endregion
 
         #region Unity Callbacks
@@ -80,11 +99,22 @@ namespace ReGaSLZR.Dare.Model.Status
         {
             stamina.Select(_ => stamina.Value)
                 .Where(val => val <= 0)
-                .Subscribe(_ => isRunning.SetValueAndForceNotify(false))
-                .AddTo(disposables);
+                .Subscribe(_ =>
+                {
+                    isRunning.SetValueAndForceNotify(false);
+                    isShielding.SetValueAndForceNotify(false);
+                })
+               .AddTo(disposables);
 
             Observable.Interval(System.TimeSpan.FromSeconds(staminaRunTick))
                 .Where(_ => isRunning.Value && (stamina.Value > 0))
+                .Subscribe(_ => {
+                    stamina.Value--;
+                })
+                .AddTo(disposables);
+
+            Observable.Interval(System.TimeSpan.FromSeconds(staminaShieldTick))
+                .Where(_ => isShielding.Value && (stamina.Value > 0))
                 .Subscribe(_ => {
                     stamina.Value--;
                 })
@@ -101,6 +131,11 @@ namespace ReGaSLZR.Dare.Model.Status
         private void OnDisable()
         {
             disposables.Clear();
+        }
+
+        private void Start()
+        {
+            isShielding.SetValueAndForceNotify(false);
         }
 
         #endregion
@@ -139,6 +174,11 @@ namespace ReGaSLZR.Dare.Model.Status
             isCrouching.Value = !isCrouching.Value;
         }
 
+        public void ToggleShielding()
+        {
+            isShielding.Value = !isShielding.Value;
+        }
+
         public void Damage(int damage)
         {
             health.Value = Mathf.Clamp(
@@ -170,6 +210,10 @@ namespace ReGaSLZR.Dare.Model.Status
         public IReadOnlyReactiveProperty<bool> OnTakeDamage()
         {
             return hasTakenDamage;
+        }
+        public IReadOnlyReactiveProperty<bool> IsShielding()
+        {
+            return isShielding;
         }
 
         public IReadOnlyReactiveProperty<int> Health()

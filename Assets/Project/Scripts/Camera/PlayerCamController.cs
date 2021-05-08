@@ -1,7 +1,7 @@
 namespace ReGaSLZR.Dare.Camera
 {
 
-    using Dare.Model.Status;
+    using Dare.Model.Player;
 
     using Cinemachine;
     using NaughtyAttributes;

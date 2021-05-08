@@ -1,7 +1,7 @@
 namespace ReGaSLZR.Dare.Injector
 {
 
-    using Model.Status;
+    using Model.Player;
 
     using NaughtyAttributes;
     using UnityEngine;
@@ -29,6 +29,8 @@ namespace ReGaSLZR.Dare.Injector
         {
             Container.Bind<IPlayerStatusGetter>().FromInstance(playerStatus);
             Container.Bind<IPlayerStatusSetter>().FromInstance(playerStatus);
+            Container.Bind<IPlayerSkillGetter>().FromInstance(playerStatus);
+            Container.Bind<IPlayerSkillSetter>().FromInstance(playerStatus);
         }
 
         #endregion

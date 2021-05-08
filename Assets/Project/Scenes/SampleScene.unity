@@ -1041,6 +1041,12 @@ LightingSettings:
   m_PVRFilteringAtrousPositionSigmaDirect: 0.5
   m_PVRFilteringAtrousPositionSigmaIndirect: 2
   m_PVRFilteringAtrousPositionSigmaAO: 1
+--- !u!95 &1324956413 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5705199914137523147, guid: 7d014845f33ea73469bee68f8bbe19e8,
+    type: 3}
+  m_PrefabInstance: {fileID: 2181541783767323216}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1559912514
 GameObject:
   m_ObjectHideFlags: 0
@@ -1244,6 +1250,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 123709720, guid: 7d014845f33ea73469bee68f8bbe19e8, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1324956410, guid: 7d014845f33ea73469bee68f8bbe19e8, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 1324956413}
+    - target: {fileID: 1324956410, guid: 7d014845f33ea73469bee68f8bbe19e8, type: 3}
+      propertyPath: animTriggerSkill
+      value: TriggerShieldOn
+      objectReference: {fileID: 0}
+    - target: {fileID: 1324956410, guid: 7d014845f33ea73469bee68f8bbe19e8, type: 3}
+      propertyPath: shieldShaderVarMaxVal
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1324956410, guid: 7d014845f33ea73469bee68f8bbe19e8, type: 3}
+      propertyPath: skillActivationDamping
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 1335050521329537803, guid: 7d014845f33ea73469bee68f8bbe19e8,
         type: 3}
       propertyPath: m_Name
@@ -1370,13 +1396,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6428123260827389117, guid: f4759cb358079294ba9fa7677143bf47,
         type: 3}
-      propertyPath: staminaRunTick
-      value: 0.025
-      objectReference: {fileID: 0}
-    - target: {fileID: 6428123260827389117, guid: f4759cb358079294ba9fa7677143bf47,
-        type: 3}
-      propertyPath: staminaRefillTick
-      value: 0.15
+      propertyPath: staminaShieldTick
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 8372492195141738105, guid: f4759cb358079294ba9fa7677143bf47,
         type: 3}

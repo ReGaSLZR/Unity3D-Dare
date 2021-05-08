@@ -16,7 +16,7 @@ namespace ReGaSLZR.Dare.Action
     /// Idle, Walk, Run, Fall, Crouch, Crouched Walk,
     /// Stagger and Death
     /// </summary>
-    public class PlayerAction : MonoBehaviour
+    public class PlayerMovement : MonoBehaviour
     {
 
         [Inject]
@@ -98,6 +98,13 @@ namespace ReGaSLZR.Dare.Action
         [AnimatorParam("animator")]
         [SerializeField]
         private string animFloatSpeed;
+
+        [Space]
+
+        [Foldout("Animation Params")]
+        [AnimatorParam("animator")]
+        [SerializeField]
+        private string animTriggerSkillShield;
 
         //Movement Calibration
 

@@ -30,6 +30,14 @@ namespace ReGaSLZR.Dare.View
         [Required]
         private Slider sliderHealth;
 
+        [SerializeField]
+        [Required]
+        private Slider sliderStamina;
+
+        [SerializeField]
+        [Required]
+        private Slider sliderNoise;
+
         [Header("Overlays")]
 
         [SerializeField]
@@ -58,16 +66,26 @@ namespace ReGaSLZR.Dare.View
 
         #region Unity Callbacks
 
+        private void Awake()
+        {
+            sliderHealth.maxValue = playerStatus.GetMaxHealth();
+            sliderStamina.maxValue = playerStatus.GetMaxStamina();
+        }
+
         private void OnEnable()
         {
             playerStatus.IsCrouching()
-                .Subscribe(isCrouching => 
+                .Subscribe(isCrouching =>
                     overlayOnCrouch.CrossFadeAlpha(
                         isCrouching ? 1f : 0f, durationCrouchOverlay, false))
                 .AddTo(disposables);
 
             playerStatus.Health()
                 .Subscribe(health => sliderHealth.value = health)
+                .AddTo(disposables);
+
+            playerStatus.Stamina()
+                .Subscribe(stamina => sliderStamina.value = stamina)
                 .AddTo(disposables);
 
             playerStatus.OnTakeDamage()
@@ -101,11 +119,11 @@ namespace ReGaSLZR.Dare.View
         private IEnumerator CorOnHealthDecrease()
         {
             overlayOnStagger.CrossFadeAlpha(0f, 0f, true);
-            overlayOnStagger.CrossFadeAlpha(alphaStaggerMax, 
+            overlayOnStagger.CrossFadeAlpha(alphaStaggerMax,
                 durationStaggerOverlay / 2, true);
             yield return new WaitForSeconds(
                 durationStaggerOverlay / 2);
-            overlayOnStagger.CrossFadeAlpha(0f, 
+            overlayOnStagger.CrossFadeAlpha(0f,
                 durationStaggerOverlay / 2, true);
         }
 

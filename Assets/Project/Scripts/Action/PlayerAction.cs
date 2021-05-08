@@ -73,19 +73,12 @@ namespace ReGaSLZR.Dare.Action
         [Foldout("Animation Params")]
         [AnimatorParam("animator")]
         [SerializeField]
-        private string animTriggerText;
+        private string animTriggerStaminaOut;
 
         [Foldout("Animation Params")]
         [AnimatorParam("animator")]
         [SerializeField]
-        private string animTriggerUnText;
-
-        [Space]
-
-        [Foldout("Animation Params")]
-        [AnimatorParam("animator")]
-        [SerializeField]
-        private string animTriggerPickUp;
+        private string animBoolStaminaOut;
 
         [Space]
 
@@ -152,6 +145,7 @@ namespace ReGaSLZR.Dare.Action
 
             this.FixedUpdateAsObservable()
                 .Where(_ => playerStatusGetter.IsOnGround().Value)
+                .Where(_ => !animator.GetBool(animBoolStaminaOut))
                 .Select(_ => HasMovementInput())
                 .Subscribe(isMoving => OnMove(isMoving, speedWalk))
                 .AddTo(disposable);
@@ -166,6 +160,12 @@ namespace ReGaSLZR.Dare.Action
 
             groundDetector.HasCollision()
                 .Subscribe(hasCollision => OnGround(hasCollision))
+                .AddTo(disposable);
+
+            //Update on Stamina (depletion and refill)
+
+            playerStatusGetter.Stamina()
+                .Subscribe(stamina => OnUpdateStamina(stamina))
                 .AddTo(disposable);
 
             //On Stagger and Death
@@ -194,6 +194,29 @@ namespace ReGaSLZR.Dare.Action
         {
             return (Mathf.Abs(Input.GetAxisRaw("Vertical")) > 0
                         || Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0);
+        }
+
+        private bool IsRunning()
+        {
+            return Input.GetButton("Run") && 
+                (playerStatusGetter.Stamina().Value > 0);
+        }
+
+        private void OnUpdateStamina(int stamina)
+        {
+            bool isStaminaOut = (stamina <= 0);
+            bool isPlayingStaminaOut = animator.GetBool(animBoolStaminaOut);
+
+            if (isStaminaOut && !isPlayingStaminaOut)
+            {
+                animator.SetBool(animBoolStaminaOut, true);
+                animator.SetTrigger(animTriggerStaminaOut);
+            }
+            else if ((stamina > playerStatusGetter.GetCriticalStamina()) 
+                && isPlayingStaminaOut)
+            {
+                animator.SetBool(animBoolStaminaOut, false);
+            }
         }
 
         private void OnStagger(bool isDead)
@@ -240,7 +263,7 @@ namespace ReGaSLZR.Dare.Action
             float hori = Input.GetAxisRaw("Horizontal");
             float vert = Input.GetAxisRaw("Vertical");
             bool isCrouching = playerStatusGetter.IsCrouching().Value;
-            bool isRunning = Input.GetButton("Run") && (vert > 0);
+            bool isRunning = IsRunning() && (vert > 0);
 
             if (isCrouching && isRunning)
             {

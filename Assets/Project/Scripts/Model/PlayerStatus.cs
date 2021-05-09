@@ -10,6 +10,7 @@ namespace ReGaSLZR.Dare.Model.Player
     public interface IPlayerSkillGetter
     {
         public IReadOnlyReactiveProperty<bool> IsShielding();
+        public int GetStaminaCostSummonBait();
     }
 
     public interface IPlayerSkillSetter
@@ -40,6 +41,7 @@ namespace ReGaSLZR.Dare.Model.Player
         public void SetIsOnGround(bool isOnGround);
         public void ToggleIsCrouching();
         public void Damage(int damage);
+        public void CostStamina(int cost);
 
     }
 
@@ -51,6 +53,10 @@ namespace ReGaSLZR.Dare.Model.Player
     {
 
         #region Inspector Variables
+
+        [SerializeField]
+        [Range(1, MAX_STAMINA)]
+        private int staminaCostSummonBait = 85;
 
         [SerializeField]
         [Range(0.001f, 0.25f)]
@@ -157,7 +163,16 @@ namespace ReGaSLZR.Dare.Model.Player
 
         #endregion
 
-        #region Setter Interface Implementation
+        #region Skill Setter Interface Implementation
+
+        public void ToggleShielding()
+        {
+            isShielding.Value = !isShielding.Value;
+        }
+
+        #endregion
+
+        #region Status Setter Interface Implementation
 
         public void SetIsOnGround(bool isOnGround)
         {
@@ -174,13 +189,14 @@ namespace ReGaSLZR.Dare.Model.Player
             isCrouching.Value = !isCrouching.Value;
         }
 
-        public void ToggleShielding()
-        {
-            isShielding.Value = !isShielding.Value;
-        }
-
         public void Damage(int damage)
         {
+            if (isShielding.Value)
+            {
+                //TODO apply damage deflection FX
+                return;
+            }
+
             health.Value = Mathf.Clamp(
                 health.Value - damage, 0, MAX_HEALTH);
             hasTakenDamage.SetValueAndForceNotify(
@@ -188,9 +204,29 @@ namespace ReGaSLZR.Dare.Model.Player
             isCrouching.SetValueAndForceNotify(false);
         }
 
+        public void CostStamina(int cost)
+        {
+            stamina.Value = Mathf.Clamp(
+                stamina.Value - cost, 0, MAX_STAMINA);
+        }
+
         #endregion
 
-        #region Getter Interface Implementation
+        #region Skill Getter Interface Implementation
+
+        public IReadOnlyReactiveProperty<bool> IsShielding()
+        {
+            return isShielding;
+        }
+
+        public int GetStaminaCostSummonBait()
+        {
+            return staminaCostSummonBait;
+        }
+
+        #endregion
+
+        #region Status Getter Interface Implementation
 
         public IReadOnlyReactiveProperty<bool> IsOnGround()
         {
@@ -210,10 +246,6 @@ namespace ReGaSLZR.Dare.Model.Player
         public IReadOnlyReactiveProperty<bool> OnTakeDamage()
         {
             return hasTakenDamage;
-        }
-        public IReadOnlyReactiveProperty<bool> IsShielding()
-        {
-            return isShielding;
         }
 
         public IReadOnlyReactiveProperty<int> Health()

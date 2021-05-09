@@ -3,7 +3,7 @@ Shader "ShadersLab/HoloShield"
     Properties{
         _MainTex("Base (RGB)", 2D) = "white" {}
         _RimValue("Rim", Range(0, 1)) = 0.5
-        _Color("Color", Color) = (1, 1, 1, 1)
+        [HDR]_Color("Color", Color) = (1, 1, 1, 1)
     }
         SubShader{
             Tags { "RenderType" = "Transparent" "Queue" = "Transparent" }

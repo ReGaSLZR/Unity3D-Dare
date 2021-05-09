@@ -1,5 +1,6 @@
 namespace ReGaSLZR.Dare.Action
 {
+
     using Dare.Model.Player;
 
     using NaughtyAttributes;
@@ -9,10 +10,8 @@ namespace ReGaSLZR.Dare.Action
     using UnityEngine;
     using Zenject;
 
-    public class PlayerSkillShield : MonoBehaviour
+    public class PlayerSkillShield : BaseSkill
     {
-
-        #region Private Variables
 
         [Inject]
         private IPlayerSkillGetter playerSkillGetter;
@@ -20,36 +19,13 @@ namespace ReGaSLZR.Dare.Action
         [Inject]
         private IPlayerSkillSetter playerSkillSetter;
 
-        private readonly CompositeDisposable disposables = new CompositeDisposable();
-
-        #endregion
-
         #region Inspector Variables
 
-        [SerializeField]
-        private string skillButton = string.Empty;
-
-        [SerializeField]
-        [Range(0.001f, 5f)]
-        private float skillActivationDamping = 0.1f;
+        [Header("Shield Config")]
 
         [SerializeField]
         [Required]
-        private Animator animator;
-
-        [AnimatorParam("animator")]
-        [SerializeField]
-        private string animTriggerSkill;
-
-        [SerializeField]
-        [Range(0.1f, 5f)]
-        private float skillDelayOnActivate = 1f;
-
-        [Space]
-
-        [SerializeField]
-        [Required]
-        private Renderer shield;
+        private Renderer shieldRenderer;
 
         [SerializeField]
         private string shieldShaderVarName = "_Rim";
@@ -58,11 +34,17 @@ namespace ReGaSLZR.Dare.Action
         [Range(0f, 1f)]
         private float shieldShaderVarMaxVal = 1f;
 
+        [SerializeField]
+        private Vector3 shieldSizeMin;
+
+        [SerializeField]
+        private Vector3 shieldSizeMax;
+
         #endregion
 
-        #region Unity Callbacks
+        #region Overriden Methods
 
-        private void OnEnable()
+        protected override void OnReady()
         {
             playerSkillGetter.IsShielding()
                 .Subscribe(isShielding => {
@@ -73,12 +55,8 @@ namespace ReGaSLZR.Dare.Action
 
             this.UpdateAsObservable()
                 .Where(_ => Input.GetButtonDown(skillButton))
-                .Subscribe(_ => playerSkillSetter.ToggleShielding());
-        }
-
-        private void OnDisable()
-        {
-            disposables.Clear();   
+                .Subscribe(_ => playerSkillSetter.ToggleShielding())
+                .AddTo(disposables);
         }
 
         #endregion
@@ -88,20 +66,36 @@ namespace ReGaSLZR.Dare.Action
         private IEnumerator CorUpdateShield(bool isShielding)
         {
             var targetVal = isShielding ? shieldShaderVarMaxVal : 0f;
-            var currentVal = shield.material.GetFloat(shieldShaderVarName);
+            var currentVal = shieldRenderer.material.GetFloat(shieldShaderVarName);
+            var targetSize = isShielding ? shieldSizeMax : shieldSizeMin;
 
             if (isShielding)
             {
-                animator.SetTrigger(animTriggerSkill);
-                yield return new WaitForSeconds(skillDelayOnActivate);
+                SetFXActive(false);
+                shieldRenderer.gameObject.SetActive(true);
+                animator.SetTrigger(animTrigger);
+                yield return new WaitForSeconds(delayOnActivate);
+                SetFXActive(true);
             }
+
+            shieldRenderer.gameObject.transform.localScale =
+                isShielding ? shieldSizeMin : shieldSizeMax;
 
             while (currentVal != targetVal)
             {
-                var damping = skillActivationDamping * Time.deltaTime;
+                var damping = activationDamping * Time.deltaTime;
                 currentVal = Mathf.Lerp(currentVal, targetVal, damping);
                 yield return new WaitForSeconds(damping);
-                shield.material.SetFloat(shieldShaderVarName, currentVal);
+                shieldRenderer.material.SetFloat(shieldShaderVarName, currentVal);
+                shieldRenderer.gameObject.transform.localScale =
+                    Vector3.Lerp(shieldRenderer.gameObject.transform.localScale,
+                    targetSize, damping);
+            }
+
+            if (!isShielding)
+            {
+                shieldRenderer.gameObject.SetActive(false);
+                SetFXActive(false);
             }
         }
 

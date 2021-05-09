@@ -71,6 +71,7 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 #Custom gitignore entries by Ren
+/[Aa]ssets/Archanor/
 /[Aa]ssets/CC_Assets/
 /[Aa]ssets/Editor/
 /[Aa]ssets/JMO Assets/

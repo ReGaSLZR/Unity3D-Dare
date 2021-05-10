@@ -70,6 +70,7 @@ namespace ReGaSLZR.Dare.View
         {
             sliderHealth.maxValue = playerStatus.GetMaxHealth();
             sliderStamina.maxValue = playerStatus.GetMaxStamina();
+            sliderNoise.maxValue = playerStatus.GetMaxNoise();
         }
 
         private void OnEnable()
@@ -86,6 +87,10 @@ namespace ReGaSLZR.Dare.View
 
             playerStatus.Stamina()
                 .Subscribe(stamina => sliderStamina.value = stamina)
+                .AddTo(disposables);
+
+            playerStatus.Noise()
+                .Subscribe(noise => sliderNoise.value = noise)
                 .AddTo(disposables);
 
             playerStatus.OnTakeDamage()

@@ -23,9 +23,11 @@ namespace ReGaSLZR.Dare.Model.Player
 
         public int GetMaxHealth();
         public int GetMaxStamina();
+        public int GetMaxNoise();
         public int GetCriticalStamina();
         public IReadOnlyReactiveProperty<int> Health();
         public IReadOnlyReactiveProperty<int> Stamina();
+        public IReadOnlyReactiveProperty<int> Noise();
         
         public IReadOnlyReactiveProperty<bool> IsRunning();
         public IReadOnlyReactiveProperty<bool> IsOnGround();
@@ -47,8 +49,8 @@ namespace ReGaSLZR.Dare.Model.Player
 
     #endregion
 
-    public class PlayerStatus : MonoBehaviour, 
-        IPlayerStatusGetter, IPlayerStatusSetter, 
+    public class PlayerStatus : MonoBehaviour,
+        IPlayerStatusGetter, IPlayerStatusSetter,
         IPlayerSkillGetter, IPlayerSkillSetter
     {
 
@@ -84,8 +86,9 @@ namespace ReGaSLZR.Dare.Model.Player
         private const int MAX_NOISE = 100;
 
         //Base Stats
-        private ReactiveProperty<int> health = new ReactiveProperty<int>(MAX_HEALTH);
-        private ReactiveProperty<int> stamina = new ReactiveProperty<int>(MAX_STAMINA);
+        private ReactiveProperty<int> statHealth = new ReactiveProperty<int>(MAX_HEALTH);
+        private ReactiveProperty<int> statStamina = new ReactiveProperty<int>(MAX_STAMINA);
+        private ReactiveProperty<int> statNoise = new ReactiveProperty<int>(0);
 
         //Derived Base Stats
         private ReactiveProperty<bool> hasTakenDamage = new ReactiveProperty<bool>(false);
@@ -104,7 +107,7 @@ namespace ReGaSLZR.Dare.Model.Player
 
         private void OnEnable()
         {
-            stamina.Select(_ => stamina.Value)
+            statStamina.Select(_ => statStamina.Value)
                 .Where(val => val <= 0)
                 .Subscribe(_ =>
                 {
@@ -114,23 +117,26 @@ namespace ReGaSLZR.Dare.Model.Player
                .AddTo(disposables);
 
             Observable.Interval(System.TimeSpan.FromSeconds(staminaRunTick))
-                .Where(_ => isRunning.Value && (stamina.Value > 0))
-                .Subscribe(_ => {
-                    stamina.Value--;
+                .Where(_ => isRunning.Value && (statStamina.Value > 0))
+                .Subscribe(_ =>
+                {
+                    statStamina.Value--;
                 })
                 .AddTo(disposables);
 
             Observable.Interval(System.TimeSpan.FromSeconds(staminaShieldTick))
-                .Where(_ => isShielding.Value && (stamina.Value > 0))
-                .Subscribe(_ => {
-                    stamina.Value--;
+                .Where(_ => isShielding.Value && (statStamina.Value > 0))
+                .Subscribe(_ =>
+                {
+                    statStamina.Value--;
                 })
                 .AddTo(disposables);
 
             Observable.Interval(System.TimeSpan.FromSeconds(staminaRefillTick))
-                .Where(_ => !isRunning.Value && (stamina.Value < MAX_STAMINA))
-                .Subscribe(_ => {
-                    stamina.Value++;
+                .Where(_ => !isRunning.Value && (statStamina.Value < MAX_STAMINA))
+                .Subscribe(_ =>
+                {
+                    statStamina.Value++;
                 })
                 .AddTo(disposables);
         }
@@ -158,8 +164,8 @@ namespace ReGaSLZR.Dare.Model.Player
         [Button]
         private void ResetHealthAndStamina()
         {
-            health.Value = MAX_HEALTH;
-            stamina.Value = MAX_STAMINA;
+            statHealth.Value = MAX_HEALTH;
+            statStamina.Value = MAX_STAMINA;
         }
 
         #endregion
@@ -199,19 +205,19 @@ namespace ReGaSLZR.Dare.Model.Player
                 return;
             }
 
-            health.Value = Mathf.Clamp(
-                health.Value - damage, 0, MAX_HEALTH);
+            statHealth.Value = Mathf.Clamp(
+                statHealth.Value - damage, 0, MAX_HEALTH);
             hasTakenDamage.SetValueAndForceNotify(
-                (health.Value < 100) && (health.Value > 0));
+                (statHealth.Value < 100) && (statHealth.Value > 0));
             isCrouching.SetValueAndForceNotify(false);
         }
 
         public void CostStamina(int cost)
         {
-            stamina.Value = Mathf.Clamp(
-                stamina.Value - cost, 0, MAX_STAMINA);
-    
-            isCrouching.Value = false;            
+            statStamina.Value = Mathf.Clamp(
+                statStamina.Value - cost, 0, MAX_STAMINA);
+
+            isCrouching.Value = false;
         }
 
         #endregion
@@ -254,12 +260,17 @@ namespace ReGaSLZR.Dare.Model.Player
 
         public IReadOnlyReactiveProperty<int> Health()
         {
-            return health;
+            return statHealth;
         }
 
         public IReadOnlyReactiveProperty<int> Stamina()
         {
-            return stamina;
+            return statStamina;
+        }
+
+        public IReadOnlyReactiveProperty<int> Noise()
+        {
+            return statNoise;
         }
 
         public int GetMaxHealth()
@@ -270,6 +281,11 @@ namespace ReGaSLZR.Dare.Model.Player
         public int GetMaxStamina()
         {
             return MAX_STAMINA;
+        }
+
+        public int GetMaxNoise()
+        {
+            return MAX_NOISE;
         }
 
         public int GetCriticalStamina()

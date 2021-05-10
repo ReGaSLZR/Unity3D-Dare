@@ -1392,10 +1392,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1441080730, guid: f4759cb358079294ba9fa7677143bf47, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1837205748473490486, guid: f4759cb358079294ba9fa7677143bf47,
         type: 3}
       propertyPath: m_RootOrder
@@ -1450,11 +1446,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6428123260827389117, guid: f4759cb358079294ba9fa7677143bf47,
-        type: 3}
-      propertyPath: staminaShieldTick
-      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 8372492195141738105, guid: f4759cb358079294ba9fa7677143bf47,
         type: 3}

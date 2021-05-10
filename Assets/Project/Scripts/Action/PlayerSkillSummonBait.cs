@@ -24,7 +24,11 @@ namespace ReGaSLZR.Dare.Action
 
         #region Inspector Variables
 
-        [Header("Camouflage Config")]
+        [SerializeField]
+        [Required]
+        private Transform playerParent;
+
+        [Header("Bait Config")]
 
         [SerializeField]
         [Required]
@@ -36,7 +40,14 @@ namespace ReGaSLZR.Dare.Action
 
         #endregion
 
+        private Transform mainCam;
+
         #region Overriden Methods
+
+        private void Awake()
+        {
+            mainCam = Camera.main.transform;
+        }
 
         protected override void OnReady()
         {

@@ -81,6 +81,7 @@ namespace ReGaSLZR.Dare.Model.Player
 
         private const int MAX_HEALTH = 100;
         private const int MAX_STAMINA = 100;
+        private const int MAX_NOISE = 100;
 
         //Base Stats
         private ReactiveProperty<int> health = new ReactiveProperty<int>(MAX_HEALTH);
@@ -168,6 +169,7 @@ namespace ReGaSLZR.Dare.Model.Player
         public void ToggleShielding()
         {
             isShielding.Value = !isShielding.Value;
+            CostStamina(0);
         }
 
         #endregion
@@ -208,6 +210,8 @@ namespace ReGaSLZR.Dare.Model.Player
         {
             stamina.Value = Mathf.Clamp(
                 stamina.Value - cost, 0, MAX_STAMINA);
+    
+            isCrouching.Value = false;            
         }
 
         #endregion

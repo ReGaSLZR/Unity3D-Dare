@@ -828,7 +828,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1441080731
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2143,8 +2143,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e20a9ec1e32c6840bdc7934c7234df5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  staminaCostSummonBait: 85
   staminaRunTick: 0.025
-  staminaShieldTick: 0.005
+  staminaShieldTick: 0.05
   staminaRefillTick: 0.15
   debugDamage: 25
 --- !u!1 &2594030513372557357

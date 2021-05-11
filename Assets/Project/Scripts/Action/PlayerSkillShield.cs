@@ -8,6 +8,7 @@ namespace ReGaSLZR.Dare.Action
     using UniRx;
     using UniRx.Triggers;
     using UnityEngine;
+    using UnityEngine.Playables;
     using Zenject;
 
     public class PlayerSkillShield : BaseSkill
@@ -28,17 +29,12 @@ namespace ReGaSLZR.Dare.Action
         private Renderer shieldRenderer;
 
         [SerializeField]
-        private string shieldShaderVarName = "_Rim";
+        [Required]
+        private PlayableDirector shieldOnEntrance;
 
         [SerializeField]
-        [Range(0f, 1f)]
-        private float shieldShaderVarMaxVal = 1f;
-
-        [SerializeField]
-        private Vector3 shieldSizeMin;
-
-        [SerializeField]
-        private Vector3 shieldSizeMax;
+        [Required]
+        private PlayableDirector shieldOnExit;
 
         #endregion
 
@@ -65,10 +61,6 @@ namespace ReGaSLZR.Dare.Action
 
         private IEnumerator CorUpdateShield(bool isShielding)
         {
-            var targetVal = isShielding ? shieldShaderVarMaxVal : 0f;
-            var currentVal = shieldRenderer.material.GetFloat(shieldShaderVarName);
-            var targetSize = isShielding ? shieldSizeMax : shieldSizeMin;
-
             if (isShielding)
             {
                 SetFXActive(false);
@@ -76,26 +68,14 @@ namespace ReGaSLZR.Dare.Action
                 animator.SetTrigger(animTrigger);
                 yield return new WaitForSeconds(delayOnActivate);
                 SetFXActive(true);
+                shieldOnEntrance.Play();
             }
-
-            shieldRenderer.gameObject.transform.localScale =
-                isShielding ? shieldSizeMin : shieldSizeMax;
-
-            while (currentVal != targetVal)
+            else 
             {
-                var damping = activationDamping * Time.deltaTime;
-                currentVal = Mathf.Lerp(currentVal, targetVal, damping);
-                yield return new WaitForSeconds(damping);
-                shieldRenderer.material.SetFloat(shieldShaderVarName, currentVal);
-                shieldRenderer.gameObject.transform.localScale =
-                    Vector3.Lerp(shieldRenderer.gameObject.transform.localScale,
-                    targetSize, damping);
-            }
-
-            if (!isShielding)
-            {
-                shieldRenderer.gameObject.SetActive(false);
                 SetFXActive(false);
+                shieldOnExit.Play();
+                yield return new WaitForSeconds((float)shieldOnExit.duration);
+                shieldRenderer.gameObject.SetActive(false);
             }
         }
 

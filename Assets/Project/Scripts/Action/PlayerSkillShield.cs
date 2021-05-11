@@ -44,8 +44,16 @@ namespace ReGaSLZR.Dare.Action
         {
             playerSkillGetter.IsShielding()
                 .Subscribe(isShielding => {
-                    StopAllCoroutines();
-                    StartCoroutine(CorUpdateShield(isShielding));
+                    if (!isShielding && 
+                        !shieldRenderer.gameObject.activeInHierarchy)
+                    {
+                        return;
+                    }
+                    else 
+                    {
+                        StopAllCoroutines();
+                        StartCoroutine(CorUpdateShield(isShielding));
+                    }
                 })
                 .AddTo(disposables);
 
@@ -61,10 +69,11 @@ namespace ReGaSLZR.Dare.Action
 
         private IEnumerator CorUpdateShield(bool isShielding)
         {
+            SetFXActive(false);
+            shieldRenderer.gameObject.SetActive(true);
+
             if (isShielding)
-            {
-                SetFXActive(false);
-                shieldRenderer.gameObject.SetActive(true);
+            {        
                 animator.SetTrigger(animTrigger);
                 yield return new WaitForSeconds(delayOnActivate);
                 SetFXActive(true);
@@ -72,7 +81,6 @@ namespace ReGaSLZR.Dare.Action
             }
             else 
             {
-                SetFXActive(false);
                 shieldOnExit.Play();
                 yield return new WaitForSeconds((float)shieldOnExit.duration);
                 shieldRenderer.gameObject.SetActive(false);

@@ -113,6 +113,7 @@ namespace ReGaSLZR.Dare.Model.Player
                 {
                     isRunning.SetValueAndForceNotify(false);
                     isShielding.SetValueAndForceNotify(false);
+                    isCrouching.SetValueAndForceNotify(false);
                 })
                .AddTo(disposables);
 

@@ -25,9 +25,7 @@ namespace ReGaSLZR.Dare.Action
 
         #region Inspector Variables
 
-        [SerializeField]
-        [Required]
-        private Transform playerParent;
+        [Header("Bait Camera")]
 
         [SerializeField]
         [Required]
@@ -45,11 +43,11 @@ namespace ReGaSLZR.Dare.Action
 
         [SerializeField]
         [Required]
-        private Transform baitSpawnPoint;
+        private Transform baitSpawnMarker;
 
         [SerializeField]
         [Tag]
-        private string tagSpawnPoint;
+        private string tagForSpawningAt;
 
         #endregion
 
@@ -76,13 +74,13 @@ namespace ReGaSLZR.Dare.Action
                     var ray = mainCam.ScreenPointToRay(center);
                     if (Physics.Raycast(ray, out hit))
                     {
-                        baitSpawnPoint.gameObject.SetActive(
-                            hit.collider.CompareTag(tagSpawnPoint));
-                        baitSpawnPoint.position = hit.point;
+                        baitSpawnMarker.gameObject.SetActive(
+                            hit.collider.CompareTag(tagForSpawningAt));
+                        baitSpawnMarker.position = hit.point;
                     }
                     else 
                     {
-                        baitSpawnPoint.gameObject.SetActive(false);
+                        baitSpawnMarker.gameObject.SetActive(false);
                     }
                 })
                 .AddTo(disposables);
@@ -93,7 +91,7 @@ namespace ReGaSLZR.Dare.Action
                .Where(_ => playerStatusGetter.Stamina().Value >= 
                     playerSkillGetter.GetStaminaCostSummonBait())
                .Subscribe(_ => {
-                   if (baitSpawnPoint.gameObject.activeInHierarchy)
+                   if (baitSpawnMarker.gameObject.activeInHierarchy)
                    {
                        StopAllCoroutines();
                        StartCoroutine(CorSummonBait());
@@ -111,7 +109,7 @@ namespace ReGaSLZR.Dare.Action
         private void Start()
         {
             aimCamera.gameObject.SetActive(false);
-            baitSpawnPoint.gameObject.SetActive(false);
+            baitSpawnMarker.gameObject.SetActive(false);
         }
 
         #endregion
@@ -120,7 +118,7 @@ namespace ReGaSLZR.Dare.Action
 
         private IEnumerator CorSummonBait()
         {
-            baitSpawnPoint.gameObject.SetActive(false);
+            baitSpawnMarker.gameObject.SetActive(false);
             animator.ResetTrigger(animTrigger);
             animator.SetTrigger(animTrigger);
 
@@ -133,7 +131,7 @@ namespace ReGaSLZR.Dare.Action
             playerStatusSetter.CostStamina(
                 playerSkillGetter.GetStaminaCostSummonBait());
 
-            bait.transform.position = baitSpawnPoint.position;
+            bait.transform.position = baitSpawnMarker.position;
             bait.SetActive(true);
 
             yield return new WaitForSeconds(delayAimCameraDeactivation);

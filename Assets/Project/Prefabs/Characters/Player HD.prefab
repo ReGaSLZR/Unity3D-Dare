@@ -1252,12 +1252,11 @@ MonoBehaviour:
   delayOnActivate: 1
   effectsObj:
   - {fileID: 2181541784364994863}
-  playerParent: {fileID: 1859104617321482673}
   aimCamera: {fileID: 0}
   delayAimCameraDeactivation: 1
   bait: {fileID: 0}
-  baitSpawnPoint: {fileID: 3840673573256166049}
-  tagSpawnPoint: Floor
+  baitSpawnMarker: {fileID: 3840673573256166049}
+  tagForSpawningAt: Floor
 --- !u!1 &1210513425603447219
 GameObject:
   m_ObjectHideFlags: 0
@@ -4690,7 +4689,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3840673573256166049}
   m_Layer: 0
-  m_Name: Bait Spawnpoint
+  m_Name: Bait Spawn Marker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

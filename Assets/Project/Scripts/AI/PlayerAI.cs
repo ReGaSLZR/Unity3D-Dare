@@ -19,42 +19,57 @@ namespace ReGaSLZR.Dare.AI
         [Inject]
         private IPlayerStatusSetter playerStatusSetter;
 
+        [Inject]
+        private IPlayerSkillGetter playerSkillGetter;
+
+        [Inject]
+        private IPlayerSkillSetter playerSkillSetter;
+
         #region Inspector Variables
 
         [Header("Player AI Config")]
 
         [SerializeField]
         [Required]
+        [Tooltip("A skill with Aim and Release mechanic.")]
         private BaseSkill skillSub;
 
         #endregion
 
         private void OnEnable()
         {
-            RegisterTerminalObservers();
+            RegisterTerminal();
         }
 
-        private void RegisterTerminalObservers()
+        private void RegisterTerminal()
         {
             playerStatusGetter.Health()
                 .Where(health => (health <= 0))
                 .Subscribe(health => {
                     disposableMovement.Clear();
+                    disposableSkill.Clear();
+
                     movement.OnStagger(true);
                 })
                 .AddTo(disposableTerminal);
 
             playerStatusGetter.Health()
-                .Where(health => health >= playerStatusGetter.GetMaxHealth())
+                .Where(health => health >=
+                    playerStatusGetter.GetMaxHealth())
                 .Subscribe(_ => {
                     disposableMovement.Clear();
-                    RegisterMovementObservables();
+                    disposableSkill.Clear();
+
+                    RegisterMovement();
+                    RegisterSkillMain();
+                    RegisterSkillSub();
+
                     movement.ResetAnimator();
                 })
                 .AddTo(disposableTerminal);
         }
 
-        private void RegisterMovementObservables()
+        private void RegisterMovement()
         {
             //Basic Movement: Walk, Run, Crouch
             this.FixedUpdateAsObservable()
@@ -102,6 +117,45 @@ namespace ReGaSLZR.Dare.AI
                 .Where(hasTakenDamage => hasTakenDamage)
                 .Subscribe(_ => movement.OnStagger(false))
                 .AddTo(disposableMovement);
+        }
+
+        private void RegisterSkillSub()
+        {
+            //Upon holding down the skill key, aim...
+            this.UpdateAsObservable()
+                .Where(_ => Input.GetButton(skillSub.GetSkillButton()))
+                .Where(_ => playerStatusGetter.Stamina().Value >=
+                    playerSkillGetter.GetStaminaCostSummonBait())
+                .Subscribe(_ => skillSub.Aim())
+                .AddTo(disposableSkill);
+
+            //Upon releasing the skill key, execute
+            this.UpdateAsObservable()
+               .Where(_ => Input.GetButtonUp(skillSub.GetSkillButton()))
+               .Where(_ => playerStatusGetter.Stamina().Value >=
+                    playerSkillGetter.GetStaminaCostSummonBait())
+               .Subscribe(_ =>
+               {
+                   var isComplete = skillSub.Execute();
+                   if (isComplete)
+                   {
+                       playerStatusSetter.CostStamina(
+                            playerSkillGetter.GetStaminaCostSummonBait());
+                   }
+               })
+               .AddTo(disposableSkill);
+        }
+
+        private void RegisterSkillMain()
+        {
+            this.UpdateAsObservable()
+                .Where(_ => Input.GetButtonDown(skillMain.GetSkillButton()))
+                .Subscribe(_ => playerSkillSetter.ToggleShielding())
+                .AddTo(disposableSkill);
+
+            playerSkillGetter.IsShielding()
+                .Subscribe(isShielding => skillMain.Execute(isShielding))
+                .AddTo(disposableSkill);
         }
 
     }

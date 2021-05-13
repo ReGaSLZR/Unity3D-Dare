@@ -8,12 +8,6 @@ namespace ReGaSLZR.Dare.Skill
     public abstract class BaseSkill : MonoBehaviour
     {
 
-        #region Private Variables
-
-        protected readonly CompositeDisposable disposables = new CompositeDisposable();
-
-        #endregion
-
         #region Inspector Variables
 
         [Header("Base Config")]
@@ -49,17 +43,7 @@ namespace ReGaSLZR.Dare.Skill
 
         #region Unity Callbacks
 
-        protected virtual void OnEnable()
-        {
-            OnReady();
-        }
-
-        protected virtual void OnDisable()
-        {
-            disposables.Clear();
-        }
-
-        private void Start()
+        protected virtual void Start()
         {
             SetFXActive(false);
         }
@@ -68,7 +52,17 @@ namespace ReGaSLZR.Dare.Skill
 
         #region Base Methods
 
-        protected abstract void OnReady();
+        public virtual string GetSkillButton()
+        {
+            return skillButton;
+        }
+
+        public abstract void Aim();
+
+        /// <summary>
+        /// Returns true if the call was completed.
+        /// </summary>
+        public abstract bool Execute(bool trigger = false); 
 
         #endregion
 

@@ -1486,8 +1486,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movement: {fileID: 2181541784235057496}
   groundDetector: {fileID: 1573126109}
-  skill1: {fileID: 8569993726987747515}
-  skill2: {fileID: 236726105}
+  skillMain: {fileID: 8569993726987747515}
+  skillSub: {fileID: 236726105}
 --- !u!1 &1376785714726494003
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,24 +1,13 @@
 namespace ReGaSLZR.Dare.Skill
 {
 
-    using Dare.Model.Player;
-
     using NaughtyAttributes;
     using System.Collections;
-    using UniRx;
-    using UniRx.Triggers;
     using UnityEngine;
     using UnityEngine.Playables;
-    using Zenject;
 
     public class PlayerSkillShield : BaseSkill
     {
-
-        [Inject]
-        private IPlayerSkillGetter playerSkillGetter;
-
-        [Inject]
-        private IPlayerSkillSetter playerSkillSetter;
 
         #region Inspector Variables
 
@@ -38,34 +27,28 @@ namespace ReGaSLZR.Dare.Skill
 
         #endregion
 
-        #region Overriden Methods
+        #region Class Implementation
 
-        protected override void OnReady()
+        public override void Aim()
         {
-            playerSkillGetter.IsShielding()
-                .Subscribe(isShielding => {
-                    if (!isShielding && 
-                        !shieldRenderer.gameObject.activeInHierarchy)
-                    {
-                        return;
-                    }
-                    else 
-                    {
-                        StopAllCoroutines();
-                        StartCoroutine(CorUpdateShield(isShielding));
-                    }
-                })
-                .AddTo(disposables);
-
-            this.UpdateAsObservable()
-                .Where(_ => Input.GetButtonDown(skillButton))
-                .Subscribe(_ => playerSkillSetter.ToggleShielding())
-                .AddTo(disposables);
+            //No Aim feature for this skill.
+            return;
         }
 
-        #endregion
-
-        #region Class Implementation
+        public override bool Execute(bool trigger = false)
+        {
+            if (!trigger && 
+                !shieldRenderer.gameObject.activeInHierarchy)
+            {
+                return false;
+            }
+            else
+            {
+                StopAllCoroutines();
+                StartCoroutine(CorUpdateShield(trigger));
+                return true;
+            }
+        }
 
         private IEnumerator CorUpdateShield(bool isShielding)
         {

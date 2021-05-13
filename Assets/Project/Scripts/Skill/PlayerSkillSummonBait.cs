@@ -1,27 +1,13 @@
 namespace ReGaSLZR.Dare.Skill
 {
 
-    using Dare.Model.Player;
-
     using Cinemachine;
     using NaughtyAttributes;
-    using System.Collections;
-    using UniRx;
-    using UniRx.Triggers;
+    using System.Collections; 
     using UnityEngine;
-    using Zenject;
 
     public class PlayerSkillSummonBait : BaseSkill
     {
-
-        [Inject]
-        private IPlayerStatusGetter playerStatusGetter;
-
-        [Inject]
-        private IPlayerStatusSetter playerStatusSetter;
-
-        [Inject]
-        private IPlayerSkillGetter playerSkillGetter;
 
         #region Inspector Variables
 
@@ -61,53 +47,10 @@ namespace ReGaSLZR.Dare.Skill
             mainCam = Camera.main;
         }
 
-        protected override void OnReady()
+        protected override void Start()
         {
-            //Upon holding down the skill key, aim...
-            this.UpdateAsObservable()
-                .Where(_ => Input.GetButton(skillButton))
-                .Where(_ => playerStatusGetter.Stamina().Value >=
-                    playerSkillGetter.GetStaminaCostSummonBait())
-                .Subscribe(_ => {
-                    aimCamera.gameObject.SetActive(true);
-
-                    var ray = mainCam.ScreenPointToRay(center);
-                    if (Physics.Raycast(ray, out hit))
-                    {
-                        baitSpawnMarker.gameObject.SetActive(
-                            hit.collider.CompareTag(tagForSpawningAt));
-                        baitSpawnMarker.position = hit.point;
-                    }
-                    else 
-                    {
-                        baitSpawnMarker.gameObject.SetActive(false);
-                    }
-                })
-                .AddTo(disposables);
-
-            //Upon releasing the skill key, execute (if there's a spawn point)
-            this.UpdateAsObservable()
-               .Where(_ => Input.GetButtonUp(skillButton))
-               .Where(_ => playerStatusGetter.Stamina().Value >= 
-                    playerSkillGetter.GetStaminaCostSummonBait())
-               .Subscribe(_ => {
-                   if (baitSpawnMarker.gameObject.activeInHierarchy)
-                   {
-                       StopAllCoroutines();
-                       StartCoroutine(CorSummonBait());
-                   }
-                   else 
-                   {
-                       aimCamera.gameObject.SetActive(false);
-                   }
-               })
-               .AddTo(disposables);
-
+            base.Start();
             bait.SetActive(false);
-        }
-
-        private void Start()
-        {
             aimCamera.gameObject.SetActive(false);
             baitSpawnMarker.gameObject.SetActive(false);
         }
@@ -115,6 +58,38 @@ namespace ReGaSLZR.Dare.Skill
         #endregion
 
         #region Class Implementation
+
+        public override void Aim()
+        {
+            aimCamera.gameObject.SetActive(true);
+
+            var ray = mainCam.ScreenPointToRay(center);
+            if (Physics.Raycast(ray, out hit))
+            {
+                baitSpawnMarker.gameObject.SetActive(
+                    hit.collider.CompareTag(tagForSpawningAt));
+                baitSpawnMarker.position = hit.point;
+            }
+            else
+            {
+                baitSpawnMarker.gameObject.SetActive(false);
+            }
+        }
+
+        public override bool Execute(bool trigger = false)
+        {
+            if (baitSpawnMarker.gameObject.activeInHierarchy)
+            {
+                StopAllCoroutines();
+                StartCoroutine(CorSummonBait());
+                return true;
+            }
+            else
+            {
+                aimCamera.gameObject.SetActive(false);
+                return false;
+            }
+        }
 
         private IEnumerator CorSummonBait()
         {
@@ -127,9 +102,6 @@ namespace ReGaSLZR.Dare.Skill
             SetFXActive(true);
 
             yield return new WaitForSeconds(delayOnActivate);
-
-            playerStatusSetter.CostStamina(
-                playerSkillGetter.GetStaminaCostSummonBait());
 
             bait.transform.position = baitSpawnMarker.position;
             bait.SetActive(true);

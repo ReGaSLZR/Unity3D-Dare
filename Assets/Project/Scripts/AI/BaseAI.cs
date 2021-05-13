@@ -14,6 +14,7 @@ namespace ReGaSLZR.Dare.AI
 
         protected CompositeDisposable disposableTerminal = new CompositeDisposable();
         protected CompositeDisposable disposableMovement = new CompositeDisposable();
+        protected CompositeDisposable disposableSkill = new CompositeDisposable();
 
         #region Inspector Variables
 
@@ -37,6 +38,7 @@ namespace ReGaSLZR.Dare.AI
         {
             disposableMovement.Clear();
             disposableTerminal.Clear();
+            disposableSkill.Clear();
         }
 
     }

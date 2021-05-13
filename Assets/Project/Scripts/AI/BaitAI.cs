@@ -5,7 +5,7 @@ namespace ReGaSLZR.Dare.AI
     using System.Collections;
     using UnityEngine;
 
-    public class BaitAI : MonoBehaviour
+    public class BaitAI : BaseAI
     {
 
         #region Inspector Variables

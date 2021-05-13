@@ -104,6 +104,61 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!1 &236726103
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 236726104}
+  - component: {fileID: 236726105}
+  m_Layer: 0
+  m_Name: SKILL Summon Bait
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &236726104
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 236726103}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1859104617321482673}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &236726105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 236726103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82d798f8cd246564aa5d66d2abef6119, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillButton: Summon Bait
+  animator: {fileID: 5705199914137523147}
+  animTrigger: TriggerSummon
+  activationDamping: 0.1
+  delayOnActivate: 1
+  effectsObj:
+  - {fileID: 2181541784364994863}
+  aimCamera: {fileID: 0}
+  delayAimCameraDeactivation: 1
+  bait: {fileID: 0}
+  baitSpawnMarker: {fileID: 3840673573256166049}
+  tagForSpawningAt: Floor
 --- !u!1 &541549572
 GameObject:
   m_ObjectHideFlags: 0
@@ -1187,9 +1242,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8342632541242045923}
   - component: {fileID: 8569993726987747515}
-  - component: {fileID: 6092324191215163469}
   m_Layer: 0
-  m_Name: SKILLS
+  m_Name: SKILL Shield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1233,30 +1287,6 @@ MonoBehaviour:
   shieldRenderer: {fileID: 123709720}
   shieldOnEntrance: {fileID: 541549574}
   shieldOnExit: {fileID: 2087545276}
---- !u!114 &6092324191215163469
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1149593927548805910}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82d798f8cd246564aa5d66d2abef6119, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  skillButton: Summon Bait
-  animator: {fileID: 5705199914137523147}
-  animTrigger: TriggerSummon
-  activationDamping: 0.1
-  delayOnActivate: 1
-  effectsObj:
-  - {fileID: 2181541784364994863}
-  aimCamera: {fileID: 0}
-  delayAimCameraDeactivation: 1
-  bait: {fileID: 0}
-  baitSpawnMarker: {fileID: 3840673573256166049}
-  tagForSpawningAt: Floor
 --- !u!1 &1210513425603447219
 GameObject:
   m_ObjectHideFlags: 0
@@ -1332,6 +1362,7 @@ GameObject:
   - component: {fileID: 2181541784235057498}
   - component: {fileID: 2181541784235057497}
   - component: {fileID: 2181541784235057496}
+  - component: {fileID: 226669102}
   m_Layer: 0
   m_Name: Player HD
   m_TagString: Player
@@ -1357,6 +1388,7 @@ Transform:
   - {fileID: 839561195473264458}
   - {fileID: 3840673573256166049}
   - {fileID: 8342632541242045923}
+  - {fileID: 236726104}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1423,7 +1455,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rigidbody: {fileID: 2181541784235057498}
   animator: {fileID: 5705199914137523147}
-  groundDetector: {fileID: 1573126109}
+  animFloatSpeed: movementSpeed
   animTriggerCover: TriggerCover
   animTriggerUnCover: TriggerUnCover
   animTriggerFall: TriggerFall
@@ -1432,12 +1464,30 @@ MonoBehaviour:
   animBoolStaminaOut: isStaminaOut
   animTriggerStagger: TriggerStagger
   animTriggerDie: TriggerDie
-  animFloatSpeed: movementSpeed
-  animTriggerSkillShield: TriggerShieldOn
   speedRotation: 0.2
   speedCrouch: 1.35
-  speedWalk: 2.9
-  speedRunAdditional: 7
+  speedWalk: 2.3
+  speedRunAdditional: 5
+  inputMoveVertical: Vertical
+  inputMoveHorizontal: Horizontal
+  inputRun: Run
+  inputCrouch: Crouch
+--- !u!114 &226669102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1335050521329537803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5eeb90c0706cda49a9968a1f6ac84af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movement: {fileID: 2181541784235057496}
+  groundDetector: {fileID: 1573126109}
+  skill1: {fileID: 8569993726987747515}
+  skill2: {fileID: 236726105}
 --- !u!1 &1376785714726494003
 GameObject:
   m_ObjectHideFlags: 0
@@ -5174,15 +5224,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 757df604761b8ef42831192c70ee1099, type: 3}
---- !u!1 &2181541784364994863 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 100004, guid: 757df604761b8ef42831192c70ee1099,
-    type: 3}
-  m_PrefabInstance: {fileID: 2181541784364963723}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2181541784364567823 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400004, guid: 757df604761b8ef42831192c70ee1099,
+    type: 3}
+  m_PrefabInstance: {fileID: 2181541784364963723}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2181541784364994863 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100004, guid: 757df604761b8ef42831192c70ee1099,
     type: 3}
   m_PrefabInstance: {fileID: 2181541784364963723}
   m_PrefabAsset: {fileID: 0}
@@ -5263,15 +5313,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 757df604761b8ef42831192c70ee1099, type: 3}
---- !u!1 &2181541784540222846 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 100004, guid: 757df604761b8ef42831192c70ee1099,
-    type: 3}
-  m_PrefabInstance: {fileID: 2181541784540189658}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2181541784540580190 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400004, guid: 757df604761b8ef42831192c70ee1099,
+    type: 3}
+  m_PrefabInstance: {fileID: 2181541784540189658}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2181541784540222846 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100004, guid: 757df604761b8ef42831192c70ee1099,
     type: 3}
   m_PrefabInstance: {fileID: 2181541784540189658}
   m_PrefabAsset: {fileID: 0}

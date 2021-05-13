@@ -1,4 +1,4 @@
-namespace ReGaSLZR.Dare.Action
+namespace ReGaSLZR.Dare.Skill
 {
 
     using Dare.Model.Player;

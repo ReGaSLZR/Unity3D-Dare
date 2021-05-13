@@ -1,4 +1,4 @@
-namespace ReGaSLZR.Dare.Action
+namespace ReGaSLZR.Dare.Skill
 {
 
     using NaughtyAttributes;
@@ -19,7 +19,8 @@ namespace ReGaSLZR.Dare.Action
         [Header("Base Config")]
 
         [SerializeField]
-        protected string skillButton = string.Empty;
+        [InputAxis]
+        protected string skillButton;
 
         [Space]
 

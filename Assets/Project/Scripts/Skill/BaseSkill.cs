@@ -41,6 +41,8 @@ namespace ReGaSLZR.Dare.Skill
 
         #endregion
 
+        public bool isInEffect { get; protected set; } = false;
+
         #region Unity Callbacks
 
         protected virtual void Start()

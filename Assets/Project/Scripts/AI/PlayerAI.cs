@@ -46,9 +46,7 @@ namespace ReGaSLZR.Dare.AI
             playerStatusGetter.Health()
                 .Where(health => (health <= 0))
                 .Subscribe(health => {
-                    disposableMovement.Clear();
-                    disposableSkill.Clear();
-
+                    DisableNonTerminals();
                     movement.OnStagger(true);
                 })
                 .AddTo(disposableTerminal);
@@ -57,16 +55,24 @@ namespace ReGaSLZR.Dare.AI
                 .Where(health => health >=
                     playerStatusGetter.GetMaxHealth())
                 .Subscribe(_ => {
-                    disposableMovement.Clear();
-                    disposableSkill.Clear();
-
-                    RegisterMovement();
-                    RegisterSkillMain();
-                    RegisterSkillSub();
-
+                    DisableNonTerminals();
+                    RegisterNonTerminals();
                     movement.ResetAnimator();
                 })
                 .AddTo(disposableTerminal);
+        }
+
+        private void DisableNonTerminals()
+        {
+            disposableMovement.Clear();
+            disposableSkill.Clear();
+        }
+
+        private void RegisterNonTerminals()
+        {
+            RegisterMovement();
+            RegisterSkillMain();
+            RegisterSkillSub();
         }
 
         private void RegisterMovement()

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Dust
   - Floor
+  - FxTemporaire
   layers:
   - Default
   - TransparentFX
@@ -13,8 +14,8 @@ TagManager:
   - Environment
   - Water
   - UI
-  - 
-  - 
+  - Aimer
+  - Player
   - 
   - 
   - 

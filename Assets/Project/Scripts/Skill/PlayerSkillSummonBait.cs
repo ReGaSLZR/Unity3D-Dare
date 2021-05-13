@@ -1,9 +1,12 @@
 namespace ReGaSLZR.Dare.Skill
 {
 
+    using Dare.Detector;
+
     using Cinemachine;
     using NaughtyAttributes;
-    using System.Collections; 
+    using System.Collections;
+    using UniRx;
     using UnityEngine;
 
     public class PlayerSkillSummonBait : BaseSkill
@@ -29,6 +32,10 @@ namespace ReGaSLZR.Dare.Skill
 
         [SerializeField]
         [Required]
+        private CollisionDetector baitSpawnAimer;
+
+        [SerializeField]
+        [Required]
         private Transform baitSpawnMarker;
 
         [SerializeField]
@@ -40,6 +47,8 @@ namespace ReGaSLZR.Dare.Skill
         private Camera mainCam;
         private readonly Vector2 center = new Vector3(Screen.width / 2, Screen.height / 2);
         private RaycastHit hit;
+        private CompositeDisposable disposables = new CompositeDisposable();
+
         #region Overriden Methods
 
         private void Awake()
@@ -63,8 +72,22 @@ namespace ReGaSLZR.Dare.Skill
         {
             aimCamera.gameObject.SetActive(true);
 
+            //baitSpawnAimer.HasCollision()
+            //    .Subscribe(hasCollision => {
+            //        if (hasCollision)
+            //        {
+            //            baitSpawnMarker.gameObject.SetActive(true);
+            //            baitSpawnMarker.position = baitSpawnAimer.ContactPoint;
+            //        }
+            //        else
+            //        {
+            //            baitSpawnMarker.gameObject.SetActive(false);
+            //        }
+            //    })
+            //    .AddTo(disposables);
+
             var ray = mainCam.ScreenPointToRay(center);
-            if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out hit, 50f))
             {
                 baitSpawnMarker.gameObject.SetActive(
                     hit.collider.CompareTag(tagForSpawningAt));
@@ -78,6 +101,8 @@ namespace ReGaSLZR.Dare.Skill
 
         public override bool Execute(bool trigger = false)
         {
+            disposables.Clear();
+
             if (baitSpawnMarker.gameObject.activeInHierarchy)
             {
                 StopAllCoroutines();

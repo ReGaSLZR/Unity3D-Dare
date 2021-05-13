@@ -40,14 +40,15 @@ namespace ReGaSLZR.Dare.Skill
             if (!trigger && 
                 !shieldRenderer.gameObject.activeInHierarchy)
             {
-                return false;
+                isInEffect = false;
             }
             else
             {
                 StopAllCoroutines();
                 StartCoroutine(CorUpdateShield(trigger));
-                return true;
             }
+
+            return isInEffect;
         }
 
         private IEnumerator CorUpdateShield(bool isShielding)
@@ -68,6 +69,8 @@ namespace ReGaSLZR.Dare.Skill
                 yield return new WaitForSeconds((float)shieldOnExit.duration);
                 shieldRenderer.gameObject.SetActive(false);
             }
+
+            isInEffect = isShielding;
         }
 
         #endregion

@@ -525,6 +525,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &713251485 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 713251485, guid: 2e6e25aab838c4f47b324804c661aa86,
+    type: 3}
+  m_PrefabInstance: {fileID: 4854671047147135256}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 701899b3c59f64c42b1c96df7795b12f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &881297468
 GameObject:
   m_ObjectHideFlags: 0
@@ -1148,8 +1160,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1559912514}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -5.22, z: 0}
-  m_LocalScale: {x: 250, y: 10, z: 250}
+  m_LocalPosition: {x: 0, y: -0.67, z: 0}
+  m_LocalScale: {x: 250, y: 1, z: 250}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -1345,6 +1357,10 @@ PrefabInstance:
       propertyPath: aimCamera
       value: 
       objectReference: {fileID: 1535111279}
+    - target: {fileID: 236726105, guid: 7d014845f33ea73469bee68f8bbe19e8, type: 3}
+      propertyPath: baitSpawnAimer
+      value: 
+      objectReference: {fileID: 713251485}
     - target: {fileID: 1335050521329537803, guid: 7d014845f33ea73469bee68f8bbe19e8,
         type: 3}
       propertyPath: m_Name
@@ -1485,23 +1501,23 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 153084509, guid: 2e6e25aab838c4f47b324804c661aa86, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.00036033298
+      value: 0.0003603329
       objectReference: {fileID: 0}
     - target: {fileID: 153084509, guid: 2e6e25aab838c4f47b324804c661aa86, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.00018582001
+      value: -0.00018581997
       objectReference: {fileID: 0}
     - target: {fileID: 1280348697, guid: 2e6e25aab838c4f47b324804c661aa86, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.015763488
+      value: -0.01576348
       objectReference: {fileID: 0}
     - target: {fileID: 1280348697, guid: 2e6e25aab838c4f47b324804c661aa86, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.45826256
+      value: 0.4582625
       objectReference: {fileID: 0}
     - target: {fileID: 1280348697, guid: 2e6e25aab838c4f47b324804c661aa86, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.008129069
+      value: 0.008129066
       objectReference: {fileID: 0}
     - target: {fileID: 1535111279, guid: 2e6e25aab838c4f47b324804c661aa86, type: 3}
       propertyPath: m_Follow

@@ -1,6 +1,5 @@
 namespace ReGaSLZR.Dare.AI
 {
-    using Dare.Detector;
     using Dare.Movement;
     using Dare.Skill;
     using Dare.Model.Player;
@@ -11,7 +10,7 @@ namespace ReGaSLZR.Dare.AI
     using UnityEngine;
     using Zenject;
 
-    public class PlayerAI : BaseAI
+    public class PlayerAI : BaseAI<PlayerMovement>
     {
 
         [Inject]
@@ -20,38 +19,19 @@ namespace ReGaSLZR.Dare.AI
         [Inject]
         private IPlayerStatusSetter playerStatusSetter;
 
-        private CompositeDisposable disposableTerminal = new CompositeDisposable();
-        private CompositeDisposable disposableMovement = new CompositeDisposable();
-
         #region Inspector Variables
 
-        [SerializeField]
-        [Required]
-        private PlayerMovement movement;
+        [Header("Player AI Config")]
 
         [SerializeField]
         [Required]
-        private CollisionDetector groundDetector;
-
-        [SerializeField]
-        [Required]
-        private BaseSkill skill1;
-
-        [SerializeField]
-        [Required]
-        private BaseSkill skill2;
+        private BaseSkill skillSub;
 
         #endregion
 
         private void OnEnable()
         {
             RegisterTerminalObservers();
-        }
-
-        private void OnDisable()
-        {
-            disposableMovement.Clear();
-            disposableTerminal.Clear();
         }
 
         private void RegisterTerminalObservers()
@@ -67,6 +47,7 @@ namespace ReGaSLZR.Dare.AI
             playerStatusGetter.Health()
                 .Where(health => health >= playerStatusGetter.GetMaxHealth())
                 .Subscribe(_ => {
+                    disposableMovement.Clear();
                     RegisterMovementObservables();
                     movement.ResetAnimator();
                 })

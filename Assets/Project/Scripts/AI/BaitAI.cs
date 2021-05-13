@@ -1,11 +1,13 @@
 namespace ReGaSLZR.Dare.AI
 {
 
+    using Dare.Movement;
+
     using NaughtyAttributes;
     using System.Collections;
     using UnityEngine;
 
-    public class BaitAI : BaseAI
+    public class BaitAI : BaseAI<BaseMovement>
     {
 
         #region Inspector Variables

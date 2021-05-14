@@ -17,7 +17,8 @@ namespace ReGaSLZR.Dare.Detector
         private CompositeDisposable disposable = new CompositeDisposable();
         private ReactiveProperty<bool> hasCollision = new ReactiveProperty<bool>();
 
-        public Vector3 ContactPoint { get; private set; } = Vector3.zero;
+        public Vector3 CollisionContactPoint { get; private set; } = Vector3.zero;
+        public Vector3 TrackedPosition { get; private set; } = Vector3.zero;
 
         public IReactiveProperty<bool> HasCollision()
         {
@@ -28,7 +29,11 @@ namespace ReGaSLZR.Dare.Detector
         {
             this.OnTriggerStayAsObservable()
                 .Where(collider => (collider.tag.Equals(trackedTag)))
-                .Subscribe(_ => hasCollision.Value = true)
+                .Subscribe(collider =>
+                {
+                    TrackedPosition = collider.gameObject.transform.position;
+                    hasCollision.Value = true;
+                })
                 .AddTo(disposable);
 
             this.OnTriggerExitAsObservable()
@@ -40,8 +45,9 @@ namespace ReGaSLZR.Dare.Detector
                .Where(collision => (collision.gameObject.tag.Equals(trackedTag)))
                .Subscribe(collision =>
                {
-                   ContactPoint = collision.contacts
+                   CollisionContactPoint = collision.contacts
                         [collision.contacts.Length - 1].point;
+                   TrackedPosition = collision.gameObject.transform.position;
                    hasCollision.Value = true;
                })
                .AddTo(disposable);
@@ -50,7 +56,7 @@ namespace ReGaSLZR.Dare.Detector
                .Where(collision => (collision.gameObject.tag.Equals(trackedTag)))
                .Subscribe(_ =>
                {
-                   ContactPoint = Vector3.zero;
+                   CollisionContactPoint = Vector3.zero;
                    hasCollision.Value = false;
                })
                .AddTo(disposable);

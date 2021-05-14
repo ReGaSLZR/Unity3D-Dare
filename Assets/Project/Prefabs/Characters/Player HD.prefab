@@ -1454,9 +1454,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36564e94236273c46a6e5f9438c3ae27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rigidbody: {fileID: 2181541784235057498}
   animator: {fileID: 5705199914137523147}
-  animFloatSpeed: movementSpeed
+  animFloatMovementSpeed: movementSpeed
   animTriggerCover: TriggerCover
   animTriggerUnCover: TriggerUnCover
   animTriggerFall: TriggerFall
@@ -1467,8 +1466,9 @@ MonoBehaviour:
   animTriggerDie: TriggerDie
   speedRotation: 0.2
   speedCrouch: 1.35
-  speedWalk: 2.3
+  speedWalk: 2.8
   speedRunAdditional: 5
+  rigidbody: {fileID: 2181541784235057498}
   inputMoveVertical: Vertical
   inputMoveHorizontal: Horizontal
   inputRun: Run

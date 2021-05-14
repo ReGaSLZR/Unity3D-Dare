@@ -9,6 +9,11 @@ namespace ReGaSLZR.Dare.Movement
 
         #region Inspector Variables
 
+        [Foldout("Components")]
+        [SerializeField]
+        [Required]
+        protected new Rigidbody rigidbody;
+
         [Foldout("Input Params")]
         [SerializeField]
         [InputAxis]
@@ -60,18 +65,26 @@ namespace ReGaSLZR.Dare.Movement
             return Input.GetButtonDown(inputCrouch);
         }
 
+        public override void OnStagger(bool isDead)
+        {
+            base.OnStagger(isDead);
+            rigidbody.velocity = Vector3.zero;
+        }
+
         /// <summary>
         /// Parts of this were taken from Brackey's tutorial:
         /// https://www.youtube.com/watch?v=4HpC--2iowE
         /// Prerequisite: The camera follows and looks at the Player
         /// but can also rotate/orbit around the Player.
         /// (Cinemachine Free-look VCam).
+        /// 
+        /// Returns if the movement completed in a running state.
         /// </summary>
-        public override bool OnMove(bool isMoving, bool isCrouching, bool isStaminaOut)
+        public bool OnMove(bool isMoving, bool isCrouching, bool hasStamina)
         {
             float hori = Input.GetAxisRaw(inputMoveHorizontal);
             float vert = Input.GetAxisRaw(inputMoveVertical);
-            bool isRunning = Input.GetButton(inputRun) && isStaminaOut && (vert > 0);
+            bool isRunning = Input.GetButton(inputRun) && hasStamina && (vert > 0);
 
             if (isCrouching && isRunning)
             {
@@ -98,11 +111,11 @@ namespace ReGaSLZR.Dare.Movement
                     * Vector3.forward;
                 rigidbody.position += (movementDirection.normalized 
                     * newSpeed * Time.fixedDeltaTime);
-                animator.SetFloat(animFloatSpeed, newSpeed);
+                animator.SetFloat(animFloatMovementSpeed, newSpeed);
             }
             else 
             {
-                animator.SetFloat(animFloatSpeed, 0);
+                animator.SetFloat(animFloatMovementSpeed, 0);
                 rigidbody.angularVelocity = Vector3.zero;
             }
 

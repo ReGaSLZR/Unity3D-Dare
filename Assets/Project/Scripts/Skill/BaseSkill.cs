@@ -2,7 +2,6 @@ namespace ReGaSLZR.Dare.Skill
 {
 
     using NaughtyAttributes;
-    using UniRx;
     using UnityEngine;
 
     public abstract class BaseSkill : MonoBehaviour

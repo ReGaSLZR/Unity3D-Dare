@@ -14,11 +14,6 @@ namespace ReGaSLZR.Dare.Movement
         [Foldout("Components")]
         [SerializeField]
         [Required]
-        protected new Rigidbody rigidbody;
-
-        [Foldout("Components")]
-        [SerializeField]
-        [Required]
         protected Animator animator;
 
         //Animation Params
@@ -26,7 +21,7 @@ namespace ReGaSLZR.Dare.Movement
         [Foldout("Animation Params")]
         [AnimatorParam("animator")]
         [SerializeField]
-        protected string animFloatSpeed;
+        protected string animFloatMovementSpeed;
 
         [Space]
 
@@ -100,9 +95,6 @@ namespace ReGaSLZR.Dare.Movement
 
         #endregion
 
-        public abstract bool OnMove(bool isMoving, 
-            bool isCrouching, bool isStaminaOut);
-
         public virtual void ResetAnimator()
         {
             animator.Rebind();
@@ -131,7 +123,6 @@ namespace ReGaSLZR.Dare.Movement
 
         public virtual void OnStagger(bool isDead)
         {
-            rigidbody.velocity = Vector3.zero;
             animator.ResetTrigger(animTriggerStagger);
             animator.SetTrigger(isDead ? animTriggerDie : animTriggerStagger);
         }

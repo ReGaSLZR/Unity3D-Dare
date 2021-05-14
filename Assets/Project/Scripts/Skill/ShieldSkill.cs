@@ -6,7 +6,7 @@ namespace ReGaSLZR.Dare.Skill
     using UnityEngine;
     using UnityEngine.Playables;
 
-    public class PlayerSkillShield : BaseSkill
+    public class ShieldSkill : BaseSkill
     {
 
         #region Inspector Variables

@@ -156,9 +156,9 @@ MonoBehaviour:
   - {fileID: 2181541784364994863}
   aimCamera: {fileID: 0}
   delayAimCameraDeactivation: 1
-  bait: {fileID: 0}
-  baitSpawnAimer: {fileID: 0}
-  baitSpawnMarker: {fileID: 3840673573256166049}
+  summon: {fileID: 0}
+  aimSpotDetector: {fileID: 0}
+  spawnMarker: {fileID: 3840673573256166049}
   tagForSpawningAt: Floor
 --- !u!1 &541549572
 GameObject:
@@ -4740,7 +4740,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3840673573256166049}
   m_Layer: 7
-  m_Name: Bait Spawn Marker
+  m_Name: Summon Spawn Marker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

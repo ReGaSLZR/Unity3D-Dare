@@ -9,12 +9,12 @@ namespace ReGaSLZR.Dare.Skill
     using UniRx;
     using UnityEngine;
 
-    public class PlayerSkillSummonBait : BaseSkill
+    public class AimSummonSkill : BaseSkill
     {
 
         #region Inspector Variables
 
-        [Header("Bait Camera")]
+        [Header("Aim Camera")]
 
         [SerializeField]
         [Required]
@@ -24,19 +24,19 @@ namespace ReGaSLZR.Dare.Skill
         [Range(0f, 5f)]
         private float delayAimCameraDeactivation = 1f;
 
-        [Header("Bait Config")]
+        [Header("Summon Config")]
 
         [SerializeField]
         [Required]
-        private GameObject bait;
+        private GameObject summon;
 
         [SerializeField]
         [Required]
-        private CollisionDetector baitSpawnAimer;
+        private CollisionDetector aimSpotDetector;
 
         [SerializeField]
         [Required]
-        private Transform baitSpawnMarker;
+        private Transform spawnMarker;
 
         [SerializeField]
         [Tag]
@@ -59,9 +59,9 @@ namespace ReGaSLZR.Dare.Skill
         protected override void Start()
         {
             base.Start();
-            bait.SetActive(false);
+            summon.SetActive(false);
             aimCamera.gameObject.SetActive(false);
-            baitSpawnMarker.gameObject.SetActive(false);
+            spawnMarker.gameObject.SetActive(false);
         }
 
         #endregion
@@ -89,13 +89,13 @@ namespace ReGaSLZR.Dare.Skill
             var ray = mainCam.ScreenPointToRay(center);
             if (Physics.Raycast(ray, out hit, 50f))
             {
-                baitSpawnMarker.gameObject.SetActive(
+                spawnMarker.gameObject.SetActive(
                     hit.collider.CompareTag(tagForSpawningAt));
-                baitSpawnMarker.position = hit.point;
+                spawnMarker.position = hit.point;
             }
             else
             {
-                baitSpawnMarker.gameObject.SetActive(false);
+                spawnMarker.gameObject.SetActive(false);
             }
         }
 
@@ -103,7 +103,7 @@ namespace ReGaSLZR.Dare.Skill
         {
             disposables.Clear();
 
-            if (baitSpawnMarker.gameObject.activeInHierarchy)
+            if (spawnMarker.gameObject.activeInHierarchy)
             {
                 StopAllCoroutines();
                 StartCoroutine(CorSummonBait());
@@ -118,18 +118,18 @@ namespace ReGaSLZR.Dare.Skill
 
         private IEnumerator CorSummonBait()
         {
-            baitSpawnMarker.gameObject.SetActive(false);
+            spawnMarker.gameObject.SetActive(false);
             animator.ResetTrigger(animTrigger);
             animator.SetTrigger(animTrigger);
 
             SetFXActive(false);
-            bait.SetActive(false);
+            summon.SetActive(false);
             SetFXActive(true);
 
             yield return new WaitForSeconds(delayOnActivate);
 
-            bait.transform.position = baitSpawnMarker.position;
-            bait.SetActive(true);
+            summon.transform.position = spawnMarker.position;
+            summon.SetActive(true);
 
             yield return new WaitForSeconds(delayAimCameraDeactivation);
             aimCamera.gameObject.SetActive(false);

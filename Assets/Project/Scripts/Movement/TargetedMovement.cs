@@ -41,6 +41,17 @@ namespace ReGaSLZR.Dare.Movement
             navMeshAgent.SetDestination(position);
         }
 
+        public bool HasReachedTarget()
+        {
+            return navMeshAgent.remainingDistance <=
+                navMeshAgent.stoppingDistance;
+        }
+
+        public Vector3 GetCurrentPosition()
+        {
+            return navMeshAgent.transform.position;
+        }
+
         #endregion
 
     }

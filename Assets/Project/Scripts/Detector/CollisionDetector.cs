@@ -18,7 +18,16 @@ namespace ReGaSLZR.Dare.Detector
         private ReactiveProperty<bool> hasCollision = new ReactiveProperty<bool>();
 
         public Vector3 CollisionContactPoint { get; private set; } = Vector3.zero;
-        public Vector3 TrackedPosition { get; private set; } = Vector3.zero;
+        public GameObject CollidedObject { get; private set; }
+        public Vector3 CollidedObjectPosition 
+            { get {
+                if (CollidedObject == null)
+                {
+                    return Vector3.zero;
+                }
+
+                return CollidedObject.transform.position;
+            } }
 
         public IReactiveProperty<bool> HasCollision()
         {
@@ -31,40 +40,49 @@ namespace ReGaSLZR.Dare.Detector
                 .Where(collider => (collider.tag.Equals(trackedTag)))
                 .Subscribe(collider =>
                 {
-                    TrackedPosition = collider.gameObject.transform.position;
+                    CollidedObject = collider.gameObject;
                     hasCollision.Value = true;
                 })
                 .AddTo(disposable);
 
             this.OnTriggerExitAsObservable()
                 .Where(collider => (collider.tag.Equals(trackedTag)))
-                .Subscribe(_ => hasCollision.Value = false)
+                .Subscribe(_ => RemoveCollisionData())
                 .AddTo(disposable);
 
             this.OnCollisionStayAsObservable()
                .Where(collision => (collision.gameObject.tag.Equals(trackedTag)))
                .Subscribe(collision =>
                {
+                   CollidedObject = collision.gameObject;
                    CollisionContactPoint = collision.contacts
                         [collision.contacts.Length - 1].point;
-                   TrackedPosition = collision.gameObject.transform.position;
                    hasCollision.Value = true;
                })
                .AddTo(disposable);
 
             this.OnCollisionExitAsObservable()
                .Where(collision => (collision.gameObject.tag.Equals(trackedTag)))
-               .Subscribe(_ =>
-               {
-                   CollisionContactPoint = Vector3.zero;
-                   hasCollision.Value = false;
-               })
+               .Subscribe(_ => RemoveCollisionData())
                .AddTo(disposable);
+
+            //If the CollidedObject is disabled while hasCollision == true, revert to false
+            Observable.Interval(System.TimeSpan.FromSeconds(5))
+                .Where(_ => hasCollision.Value)
+                .Subscribe(_ => hasCollision.Value = (CollidedObject != null) ? CollidedObject.activeInHierarchy : hasCollision.Value)
+                .AddTo(disposable);
         }
 
         private void OnDisable()
         {
             disposable.Clear();
+        }
+
+        private void RemoveCollisionData()
+        {
+            CollidedObject = null;
+            CollisionContactPoint = Vector3.zero;
+            hasCollision.Value = false;
         }
 
     }

@@ -5,16 +5,22 @@ namespace ReGaSLZR.Dare.AI
     using Dare.Movement;
 
     using NaughtyAttributes;
+    using System.Collections;
     using UniRx;
     using UniRx.Triggers;
     using UnityEngine;
 
+    /// <summary>
+    /// A Noise-seeker type of Enemy. Will use a skill when gets in range.
+    /// </summary>
     public class EnemyAI : BaseAI<TargetedMovement>
     {
 
+        #region Inspector Variables
+
         [SerializeField]
         [Required]
-        private CollisionDetector attackTargetDetector;
+        private CollisionDetector skillUseOnRangeDetector;
 
         [SerializeField]
         [Required]
@@ -24,53 +30,117 @@ namespace ReGaSLZR.Dare.AI
 
         [SerializeField]
         [Required]
+        private CollisionDetector noiseDetector;
+
+        [Space]
+
+        [SerializeField]
         private Transform target;
+
+        [Space]
+
+        [SerializeField]
+        [Range(0f, 75f)]
+        private float wanderRange = 50f;
+
+        [SerializeField]
+        [Range(3, 10)]
+        private int wanderPauseMaxDuration = 5;
+
+        #endregion
+
+        private bool isWandering;
 
         #region Unity Callbacks
 
         private void OnEnable()
         {
+            //Noise detected! -> target the noise origin
+            //NO Noise detected! -> start wandering
+            noiseDetector.HasCollision()
+                .Subscribe(_ => SetDestination())
+                .AddTo(disposableTerminal);
+
+            //Is Wandering to a set position, move to the position
             this.UpdateAsObservable()
-                .Where(_ => !chaseTargetDetector.HasCollision().Value &&
-                    !attackTargetDetector.HasCollision().Value)
+                .Where(_ => isWandering)
+                .Subscribe(_ => movement.OnMove(false))
+                .AddTo(disposableMovement);
+
+            //Upon reaching Wander target destination -> pause movement then Wander again
+            Observable.Interval(System.TimeSpan.FromSeconds(1))
+                .Where(_ => isWandering && movement.HasReachedTarget())
                 .Subscribe(_ => {
-                    //TODO code search for target AI before OnMove() call
-                    movement.SetTargetPosition(target.position);
-                    movement.OnMove(false);
+                    StopAllCoroutines();
+                    StartCoroutine(CorPauseFromWandering());
                 })
                 .AddTo(disposableMovement);
 
+            //Has detected noise; no current Attack target
+            //Move to noise origin; speed depends on whether has Chase target
             this.UpdateAsObservable()
-                .Where(_ => chaseTargetDetector.HasCollision().Value &&
-                    !attackTargetDetector.HasCollision().Value)
-                .Subscribe(_ => {
-                    movement.SetTargetPosition(target.position);
-                    movement.OnMove(true);
-                })
+                .Where(_ => noiseDetector.HasCollision().Value
+                    && !skillUseOnRangeDetector.HasCollision().Value)
+                .Select(_ => chaseTargetDetector.HasCollision().Value)
+                .Subscribe(hasChaseTarget => movement.OnMove(hasChaseTarget))
                 .AddTo(disposableMovement);
 
-            attackTargetDetector.HasCollision()
-                .Subscribe(hasTarget =>
-                {
-                    if (hasTarget)
+            //Attack target met!  -> Stop movement, start continuously attacking!
+            //Attack target lost! -> Stop attacking
+            skillUseOnRangeDetector.HasCollision()
+                .Subscribe(hasAttackTarget => {
+                    if (hasAttackTarget)
                     {
-                        movement.OnStop(); //TODO replace with attack execution
+                        movement.OnStop();
+                        Debug.Log("Attack Target met! Now attacking...");
+                        //TODO continuous attack!
                     }
-                    else
-                    {
-                        //TODO code search for target AI for the position to move to
-                        movement.SetTargetPosition(target.position);
+                    else 
+                    { 
+                        //TODO stop attack!
                     }
                 })
-                .AddTo(disposableMovement);
-
+                .AddTo(disposableSkill);
         }
 
         #endregion
 
         #region Class Implementation
 
+        private void SetDestination()
+        {
+            var isNoiseDetected = noiseDetector.HasCollision().Value;
+            isWandering = !isNoiseDetected;
 
+            target.position = isNoiseDetected ?
+                noiseDetector.CollidedObjectPosition :
+                GetWanderTarget();
+
+            movement.SetTargetPosition(target.position);
+        }
+
+        private IEnumerator CorPauseFromWandering()
+        {
+            isWandering = false;
+            movement.OnStop();
+            yield return new WaitForSeconds(Random.Range(1f, wanderPauseMaxDuration));
+
+            if (!skillUseOnRangeDetector.HasCollision().Value
+                && !chaseTargetDetector.HasCollision().Value)
+            { 
+                SetDestination();
+            }
+        }
+
+        private Vector3 GetWanderTarget()
+        {
+            var currentPosition = movement.GetCurrentPosition();
+
+            return new Vector3(
+                    Random.Range(-wanderRange, wanderRange) + currentPosition.x,
+                    currentPosition.y,
+                    Random.Range(-wanderRange, wanderRange) + currentPosition.z);
+        }
 
         #endregion
 

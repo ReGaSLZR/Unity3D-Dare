@@ -7,6 +7,7 @@ TagManager:
   - Dust
   - Floor
   - FxTemporaire
+  - Noise
   layers:
   - Default
   - TransparentFX

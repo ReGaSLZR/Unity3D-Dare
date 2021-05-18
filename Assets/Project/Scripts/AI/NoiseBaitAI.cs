@@ -65,8 +65,10 @@ namespace ReGaSLZR.Dare.AI
 
         #region Unity Callbacks
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
+
             parent.SetActive(true);
             ConfigActiveElements(true);
             StopAllCoroutines();

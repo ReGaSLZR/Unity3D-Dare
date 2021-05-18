@@ -36,9 +36,16 @@ namespace ReGaSLZR.Dare.AI
 
         #endregion
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
             RegisterTerminal();
+        }
+
+        protected override void OnHealthDepletion()
+        {
+            //base.OnHealthDepletion();
+            //TODO
         }
 
         private void RegisterTerminal()

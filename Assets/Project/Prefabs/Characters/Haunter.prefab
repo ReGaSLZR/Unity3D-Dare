@@ -2722,6 +2722,7 @@ GameObject:
   - component: {fileID: 769781734041684410}
   - component: {fileID: 919132149132334990}
   - component: {fileID: 143205253728505121}
+  - component: {fileID: 7272630012455016600}
   m_Layer: 0
   m_Name: Haunter
   m_TagString: Untagged
@@ -2860,12 +2861,28 @@ MonoBehaviour:
   movement: {fileID: 919132149132334990}
   groundDetector: {fileID: 1736316797}
   skillMain: {fileID: 906596710}
+  stats: {fileID: 7272630012455016600}
   skillUseOnRangeDetector: {fileID: 1769787381}
   chaseTargetDetector: {fileID: 1551064437}
   noiseDetector: {fileID: 865941894}
   target: {fileID: 0}
   wanderRange: 75
   wanderPauseMaxDuration: 8
+  damage: 35
+--- !u!114 &7272630012455016600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5401586702581027321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34c0c6ee83b552d4aa4c7578ef36bb8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parent: {fileID: 5401586702581027321}
+  startingHealth: 0
 --- !u!1 &5523134039958545700
 GameObject:
   m_ObjectHideFlags: 0

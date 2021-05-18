@@ -59,7 +59,7 @@ namespace ReGaSLZR.Dare.Skill
             return skillButton;
         }
 
-        public IReactiveProperty<bool> IsInEffect()
+        public IReadOnlyReactiveProperty<bool> IsInEffect()
         {
             return isInEffect;
         }

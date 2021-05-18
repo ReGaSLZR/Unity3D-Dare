@@ -29,7 +29,7 @@ namespace ReGaSLZR.Dare.Detector
                 return CollidedObject.transform.position;
             } }
 
-        public IReactiveProperty<bool> HasCollision()
+        public IReadOnlyReactiveProperty<bool> HasCollision()
         {
             return hasCollision;
         }

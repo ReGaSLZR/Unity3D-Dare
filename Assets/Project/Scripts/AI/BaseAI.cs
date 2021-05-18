@@ -4,6 +4,7 @@ namespace ReGaSLZR.Dare.AI
     using Dare.Detector;
     using Dare.Movement;
     using Dare.Skill;
+    using Dare.Stats;
 
     using NaughtyAttributes;
     using UniRx;
@@ -32,13 +33,31 @@ namespace ReGaSLZR.Dare.AI
         [Required]
         protected BaseSkill skillMain;
 
+        [SerializeField]
+        [Required]
+        protected BaseStats stats;
+
         #endregion
+
+        protected virtual void OnEnable()
+        {
+            stats.Health()
+                .Where(health => health <= 0)
+                .Subscribe(health => OnHealthDepletion())
+                .AddTo(disposableTerminal);
+        }
 
         protected virtual void OnDisable()
         {
             disposableMovement.Clear();
             disposableTerminal.Clear();
             disposableSkill.Clear();
+        }
+
+        protected virtual void OnHealthDepletion()
+        {
+            movement.OnStagger(true);
+            enabled = false;
         }
 
     }

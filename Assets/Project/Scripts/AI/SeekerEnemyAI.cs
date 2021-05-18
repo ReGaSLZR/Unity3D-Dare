@@ -17,41 +17,43 @@ namespace ReGaSLZR.Dare.AI
 
         [SerializeField]
         [Required]
-        private CollisionDetector skillUseOnRangeDetector;
+        protected CollisionDetector skillUseOnRangeDetector;
 
         [SerializeField]
         [Required]
-        private CollisionDetector chaseTargetDetector;
+        protected CollisionDetector chaseTargetDetector;
 
         [Space]
 
         [SerializeField]
         [Required]
-        private CollisionDetector noiseDetector;
+        protected CollisionDetector noiseDetector;
 
         [Space]
 
         [SerializeField]
-        private Transform target;
+        protected Transform target;
 
         [Space]
 
         [SerializeField]
         [Range(0f, 75f)]
-        private float wanderRange = 50f;
+        protected float wanderRange = 50f;
 
         [SerializeField]
         [Range(3, 10)]
-        private int wanderPauseMaxDuration = 5;
+        protected int wanderPauseMaxDuration = 5;
 
         #endregion
 
-        private bool isWandering;
+        protected bool isWandering;
 
         #region Unity Callbacks
 
-        protected virtual void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
+
             //Noise detected! -> target the noise origin
             //NO Noise detected! -> start wandering
             noiseDetector.HasCollision()

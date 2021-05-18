@@ -15,6 +15,9 @@ namespace ReGaSLZR.Dare.Stats
         [Inject]
         private IPlayerStatusSetter playerStatusSetter;
 
+        [Inject]
+        private IPlayerSkillGetter playerSkill;
+
         protected override void Start()
         {
             InitHealthValue(playerStatusGetter.Health().Value);
@@ -27,6 +30,11 @@ namespace ReGaSLZR.Dare.Stats
 
         public override void DamageHealth(int damage)
         {
+            if (playerSkill.IsShielding().Value)
+            {
+                return;
+            }
+
             base.DamageHealth(damage);
             playerStatusSetter.Damage(damage);
         }

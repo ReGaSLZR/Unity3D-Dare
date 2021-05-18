@@ -118,21 +118,22 @@ namespace ReGaSLZR.Dare.Skill
 
         private IEnumerator CorSummonBait()
         {
+            isInEffect.Value = false;
             spawnMarker.gameObject.SetActive(false);
-            animator.ResetTrigger(animTrigger);
-            animator.SetTrigger(animTrigger);
+            PlayAnimation();
 
             SetFXActive(false);
             summon.SetActive(false);
             SetFXActive(true);
 
             yield return new WaitForSeconds(delayOnActivate);
-
+            isInEffect.Value = true;
             summon.transform.position = spawnMarker.position;
             summon.SetActive(true);
 
             yield return new WaitForSeconds(delayAimCameraDeactivation);
             aimCamera.gameObject.SetActive(false);
+            isInEffect.Value = false;
         }
 
         #endregion

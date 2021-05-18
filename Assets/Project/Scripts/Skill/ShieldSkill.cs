@@ -40,7 +40,7 @@ namespace ReGaSLZR.Dare.Skill
             if (!trigger && 
                 !shieldRenderer.gameObject.activeInHierarchy)
             {
-                isInEffect = false;
+                isInEffect.Value = false;
             }
             else
             {
@@ -48,7 +48,7 @@ namespace ReGaSLZR.Dare.Skill
                 StartCoroutine(CorUpdateShield(trigger));
             }
 
-            return isInEffect;
+            return isInEffect.Value;
         }
 
         private IEnumerator CorUpdateShield(bool isShielding)
@@ -57,8 +57,8 @@ namespace ReGaSLZR.Dare.Skill
             shieldRenderer.gameObject.SetActive(true);
 
             if (isShielding)
-            {        
-                animator.SetTrigger(animTrigger);
+            {
+                PlayAnimation();
                 yield return new WaitForSeconds(delayOnActivate);
                 SetFXActive(true);
                 shieldOnEntrance.Play();
@@ -70,7 +70,7 @@ namespace ReGaSLZR.Dare.Skill
                 shieldRenderer.gameObject.SetActive(false);
             }
 
-            isInEffect = isShielding;
+            isInEffect.Value = isShielding;
         }
 
         #endregion

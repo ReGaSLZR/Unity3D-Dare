@@ -7,7 +7,7 @@ namespace ReGaSLZR.Dare.AI
     using System.Collections;
     using UnityEngine;
 
-    public class BaitAI : BaseAI<BaseMovement>
+    public class NoiseBaitAI : BaseAI<BaseMovement>
     {
 
         #region Inspector Variables

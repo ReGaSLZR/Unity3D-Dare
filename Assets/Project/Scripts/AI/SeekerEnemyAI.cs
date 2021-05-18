@@ -10,10 +10,7 @@ namespace ReGaSLZR.Dare.AI
     using UniRx.Triggers;
     using UnityEngine;
 
-    /// <summary>
-    /// A Noise-seeker type of Enemy. Will use a skill when gets in range.
-    /// </summary>
-    public class EnemyAI : BaseAI<TargetedMovement>
+    public class SeekerEnemyAI : BaseAI<TargetedMovement>
     {
 
         #region Inspector Variables
@@ -53,11 +50,13 @@ namespace ReGaSLZR.Dare.AI
 
         #region Unity Callbacks
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             //Noise detected! -> target the noise origin
             //NO Noise detected! -> start wandering
             noiseDetector.HasCollision()
+                .Where(_ => !chaseTargetDetector.HasCollision().Value
+                    && !skillUseOnRangeDetector.HasCollision().Value)
                 .Subscribe(_ => SetDestination())
                 .AddTo(disposableTerminal);
 
@@ -85,19 +84,20 @@ namespace ReGaSLZR.Dare.AI
                 .Subscribe(hasChaseTarget => movement.OnMove(hasChaseTarget))
                 .AddTo(disposableMovement);
 
-            //Attack target met!  -> Stop movement, start continuously attacking!
-            //Attack target lost! -> Stop attacking
+            //Skill target met!  -> Stop movement, start continuously using skill!
+            //Skill target lost! -> Stop skill use
             skillUseOnRangeDetector.HasCollision()
                 .Subscribe(hasAttackTarget => {
+                    StopAllCoroutines();
+
                     if (hasAttackTarget)
                     {
                         movement.OnStop();
-                        Debug.Log("Attack Target met! Now attacking...");
-                        //TODO continuous attack!
+                        skillMain.Execute(true);
                     }
                     else 
-                    { 
-                        //TODO stop attack!
+                    {
+                        skillMain.Execute(false);
                     }
                 })
                 .AddTo(disposableSkill);
@@ -123,7 +123,7 @@ namespace ReGaSLZR.Dare.AI
         {
             isWandering = false;
             movement.OnStop();
-            yield return new WaitForSeconds(Random.Range(1f, wanderPauseMaxDuration));
+            yield return new WaitForSeconds(Random.Range(1, wanderPauseMaxDuration+1));
 
             if (!skillUseOnRangeDetector.HasCollision().Value
                 && !chaseTargetDetector.HasCollision().Value)

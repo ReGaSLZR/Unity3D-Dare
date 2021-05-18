@@ -2,6 +2,7 @@ namespace ReGaSLZR.Dare.Skill
 {
 
     using NaughtyAttributes;
+    using UniRx;
     using UnityEngine;
 
     public abstract class BaseSkill : MonoBehaviour
@@ -12,6 +13,10 @@ namespace ReGaSLZR.Dare.Skill
         [Header("Base Config")]
 
         [SerializeField]
+        private bool isPlayerSkill = false;
+
+        [SerializeField]
+        [ShowIf("isPlayerSkill")]
         [InputAxis]
         protected string skillButton;
 
@@ -28,10 +33,6 @@ namespace ReGaSLZR.Dare.Skill
         [Space]
 
         [SerializeField]
-        [Range(0.001f, 5f)]
-        protected float activationDamping = 0.1f;
-
-        [SerializeField]
         [Range(0.1f, 5f)]
         protected float delayOnActivate = 1f;
 
@@ -40,7 +41,7 @@ namespace ReGaSLZR.Dare.Skill
 
         #endregion
 
-        public bool isInEffect { get; protected set; } = false;
+        protected ReactiveProperty<bool> isInEffect = new ReactiveProperty<bool>(false);
 
         #region Unity Callbacks
 
@@ -58,6 +59,11 @@ namespace ReGaSLZR.Dare.Skill
             return skillButton;
         }
 
+        public IReactiveProperty<bool> IsInEffect()
+        {
+            return isInEffect;
+        }
+
         public abstract void Aim();
 
         /// <summary>
@@ -71,8 +77,14 @@ namespace ReGaSLZR.Dare.Skill
         {
             foreach (var fx in effectsObj)
             {
-                fx.SetActive(isActive);
+                fx?.SetActive(isActive);
             }
+        }
+
+        protected void PlayAnimation()
+        {
+            animator.ResetTrigger(animTrigger);
+            animator.SetTrigger(animTrigger);
         }
 
     }

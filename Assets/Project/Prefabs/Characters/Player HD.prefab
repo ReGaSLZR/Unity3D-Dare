@@ -1504,7 +1504,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parent: {fileID: 1335050521329537803}
-  startingHealth: 0
+  startingHealth: 100
 --- !u!1 &1376785714726494003
 GameObject:
   m_ObjectHideFlags: 0

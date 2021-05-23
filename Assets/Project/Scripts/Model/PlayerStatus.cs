@@ -25,10 +25,15 @@ namespace ReGaSLZR.Dare.Model.Player
         public int GetMaxStamina();
         public int GetMaxNoise();
         public int GetCriticalStamina();
+        public NoiseActions GetNoiseActions();
         public IReadOnlyReactiveProperty<int> Health();
         public IReadOnlyReactiveProperty<int> Stamina();
         public IReadOnlyReactiveProperty<int> Noise();
         
+        /// <summary>
+        /// Caters to both walking and running actions.
+        /// </summary>
+        public IReadOnlyReactiveProperty<bool> IsMoving(); 
         public IReadOnlyReactiveProperty<bool> IsRunning();
         public IReadOnlyReactiveProperty<bool> IsOnGround();
         public IReadOnlyReactiveProperty<bool> IsCrouching();
@@ -39,11 +44,13 @@ namespace ReGaSLZR.Dare.Model.Player
     public interface IPlayerStatusSetter
     {
 
+        public void SetIsMoving(bool isMoving);
         public void SetIsRunning(bool isRunning);
         public void SetIsOnGround(bool isOnGround);
         public void ToggleIsCrouching();
         public void Damage(int damage);
         public void CostStamina(int cost);
+        public void SetNoise(bool isAdd, int value, bool isForced = false);
 
     }
 
@@ -57,23 +64,15 @@ namespace ReGaSLZR.Dare.Model.Player
         #region Inspector Variables
 
         [SerializeField]
-        [Range(1, MAX_STAMINA)]
-        private int staminaCostSummonBait = 85;
-
-        [SerializeField]
-        [Range(0.001f, 0.25f)]
-        private float staminaRunTick = 0.25f;
-
-        [SerializeField]
-        [Range(0.001f, 0.25f)]
-        private float staminaShieldTick = 0.005f;
-
-        [SerializeField]
-        [Range(0.01f, 0.25f)]
-        private float staminaRefillTick = 0.25f;
-
-        [SerializeField]
         private int debugDamage = 25;
+
+        [SerializeField]
+        [Expandable]
+        private StaminaCosts staminaCosts;
+
+        [SerializeField]
+        [Expandable]
+        private NoiseActions noiseActions;
 
         #endregion
 
@@ -95,6 +94,7 @@ namespace ReGaSLZR.Dare.Model.Player
 
         //Locomotion Stats
         private ReactiveProperty<bool> isOnGround = new ReactiveProperty<bool>(false);
+        private ReactiveProperty<bool> isMoving = new ReactiveProperty<bool>(false);
         private ReactiveProperty<bool> isRunning = new ReactiveProperty<bool>(false);
         private ReactiveProperty<bool> isCrouching = new ReactiveProperty<bool>(false);
 
@@ -107,39 +107,7 @@ namespace ReGaSLZR.Dare.Model.Player
 
         private void OnEnable()
         {
-            statStamina.Select(_ => statStamina.Value)
-                .Where(val => val <= 0)
-                .Subscribe(_ =>
-                {
-                    isRunning.SetValueAndForceNotify(false);
-                    isShielding.SetValueAndForceNotify(false);
-                    isCrouching.SetValueAndForceNotify(false);
-                })
-               .AddTo(disposables);
-
-            Observable.Interval(System.TimeSpan.FromSeconds(staminaRunTick))
-                .Where(_ => isRunning.Value && (statStamina.Value > 0))
-                .Subscribe(_ =>
-                {
-                    statStamina.Value--;
-                })
-                .AddTo(disposables);
-
-            Observable.Interval(System.TimeSpan.FromSeconds(staminaShieldTick))
-                .Where(_ => isShielding.Value && (statStamina.Value > 0))
-                .Subscribe(_ =>
-                {
-                    statStamina.Value--;
-                })
-                .AddTo(disposables);
-
-            Observable.Interval(System.TimeSpan.FromSeconds(staminaRefillTick))
-                .Where(_ => !isRunning.Value && (statStamina.Value < MAX_STAMINA))
-                .Subscribe(_ =>
-                {
-                    statStamina.Value++;
-                })
-                .AddTo(disposables);
+            RegisterDisposables();
         }
 
         private void OnDisable()
@@ -155,6 +123,54 @@ namespace ReGaSLZR.Dare.Model.Player
         #endregion
 
         #region Class Implementation
+
+        private void RegisterDisposables()
+        {
+            statStamina.Select(_ => statStamina.Value)
+                    .Where(val => val <= 0)
+                    .Subscribe(_ =>
+                    {
+                        isRunning.SetValueAndForceNotify(false);
+                        isShielding.SetValueAndForceNotify(false);
+                        isCrouching.SetValueAndForceNotify(false);
+                    })
+                   .AddTo(disposables);
+
+            Observable.Interval(System.TimeSpan.FromSeconds(staminaCosts.runTick))
+                .Where(_ => isRunning.Value && (statStamina.Value > 0))
+                .Subscribe(_ =>
+                {
+                    statStamina.Value--;
+                })
+                .AddTo(disposables);
+
+            Observable.Interval(System.TimeSpan.FromSeconds(staminaCosts.skillShieldTick))
+                .Where(_ => isShielding.Value && (statStamina.Value > 0))
+                .Subscribe(_ =>
+                {
+                    statStamina.Value--;
+                })
+                .AddTo(disposables);
+
+            Observable.Interval(System.TimeSpan.FromSeconds(staminaCosts.refillTick))
+                .Where(_ => !isRunning.Value && (statStamina.Value < MAX_STAMINA))
+                .Subscribe(_ =>
+                {
+                    statStamina.Value++;
+                })
+                .AddTo(disposables);
+        }
+
+        [Button]
+        public void ResetDisposables()
+        {
+            disposables.Clear();
+            RegisterDisposables();
+
+            statStamina.Value = MAX_STAMINA;
+            statHealth.Value = MAX_HEALTH;
+            statNoise.Value = 0;
+        }
 
         [Button]
         private void TestDamage()
@@ -186,6 +202,11 @@ namespace ReGaSLZR.Dare.Model.Player
         public void SetIsOnGround(bool isOnGround)
         {
             this.isOnGround.Value = isOnGround;
+        }
+
+        public void SetIsMoving(bool isMoving)
+        {
+            this.isMoving.Value = isMoving;
         }
 
         public void SetIsRunning(bool isRunning)
@@ -221,6 +242,13 @@ namespace ReGaSLZR.Dare.Model.Player
             isCrouching.Value = false;
         }
 
+        public void SetNoise(bool isAdd, int value, bool isForced = false)
+        {
+            int val = isForced ? value 
+                : (statNoise.Value + (isAdd ? value : -value));
+            statNoise.Value = Mathf.Clamp(val, 0, MAX_NOISE);
+        }
+
         #endregion
 
         #region Skill Getter Interface Implementation
@@ -232,7 +260,7 @@ namespace ReGaSLZR.Dare.Model.Player
 
         public int GetStaminaCostSummonBait()
         {
-            return staminaCostSummonBait;
+            return staminaCosts.skillSummonBait;
         }
 
         #endregion
@@ -242,6 +270,11 @@ namespace ReGaSLZR.Dare.Model.Player
         public IReadOnlyReactiveProperty<bool> IsOnGround()
         {
             return isOnGround;
+        }
+
+        public IReadOnlyReactiveProperty<bool> IsMoving()
+        {
+            return isMoving;
         }
 
         public IReadOnlyReactiveProperty<bool> IsRunning()
@@ -292,6 +325,11 @@ namespace ReGaSLZR.Dare.Model.Player
         public int GetCriticalStamina()
         {
             return MAX_STAMINA / 10;
+        }
+
+        public NoiseActions GetNoiseActions()
+        {
+            return noiseActions;
         }
 
         #endregion

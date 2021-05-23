@@ -42,12 +42,6 @@ namespace ReGaSLZR.Dare.AI
             RegisterTerminal();
         }
 
-        protected override void OnHealthDepletion()
-        {
-            //base.OnHealthDepletion();
-            //TODO
-        }
-
         private void RegisterTerminal()
         {
             playerStatusGetter.Health()
@@ -78,6 +72,7 @@ namespace ReGaSLZR.Dare.AI
         private void RegisterNonTerminals()
         {
             RegisterMovement();
+            RegisterMovementNoise();
             RegisterSkillMain();
             RegisterSkillSub();
         }
@@ -90,8 +85,11 @@ namespace ReGaSLZR.Dare.AI
                 .Where(_ => !movement.IsStaminaOutPlaying())
                 .Select(_ => movement.HasMovementInput())
                 .Subscribe(isMoving => {
-                    var isRunning = movement.OnMove(isMoving, playerStatusGetter.IsCrouching().Value,
+                    var isRunning = movement.OnMove(isMoving, 
+                        playerStatusGetter.IsCrouching().Value,
                         (playerStatusGetter.Stamina().Value > 0));
+
+                    playerStatusSetter.SetIsMoving(isMoving);
                     playerStatusSetter.SetIsRunning(isRunning);
 
                     if (isRunning && playerStatusGetter.IsCrouching().Value)
@@ -129,6 +127,41 @@ namespace ReGaSLZR.Dare.AI
             playerStatusGetter.OnTakeDamage()
                 .Where(hasTakenDamage => hasTakenDamage)
                 .Subscribe(_ => movement.OnStagger(false))
+                .AddTo(disposableMovement);
+        }
+
+        private void RegisterMovementNoise()
+        {
+            //Crouch idle and Standing idle
+            playerStatusGetter.IsCrouching()
+                .Where(_ => !movement.HasMovementInput())
+                .Select(_ => playerStatusGetter.IsCrouching().Value)
+                .Subscribe(isCrouching => {
+                    playerStatusSetter.SetNoise(
+                            !isCrouching,
+                            isCrouching ? 
+                                playerStatusGetter.GetNoiseActions().CrouchIdle :
+                                playerStatusGetter.GetNoiseActions().StandingIdle,
+                            isCrouching);
+                })
+                .AddTo(disposableMovement);
+
+            //Crouch walk and Standing walk
+            playerStatusGetter.IsMoving()
+                .Where(_ => !playerStatusGetter.IsRunning().Value)
+                .Select(_ => playerStatusGetter.IsMoving().Value)
+                .Subscribe(isMoving =>
+                    playerStatusSetter.SetNoise(isMoving,
+                        playerStatusGetter.IsCrouching().Value ?
+                        playerStatusGetter.GetNoiseActions().CrouchWalk :
+                        playerStatusGetter.GetNoiseActions().Walk))
+                .AddTo(disposableMovement);
+
+            //Running
+            playerStatusGetter.IsRunning()
+                .Subscribe(isRunning => 
+                    playerStatusSetter.SetNoise(isRunning, 
+                        playerStatusGetter.GetNoiseActions().Run))
                 .AddTo(disposableMovement);
         }
 

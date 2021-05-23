@@ -1,8 +1,10 @@
 namespace ReGaSLZR.Dare.Stats
 {
 
+    using Dare.Model;
     using Dare.Model.Player;
 
+    using UnityEngine;
     using UniRx;
     using Zenject;
 
@@ -18,6 +20,9 @@ namespace ReGaSLZR.Dare.Stats
         [Inject]
         private IPlayerSkillGetter playerSkill;
 
+        [SerializeField]
+        private NoiseMaker noiseMaker;
+
         protected override void Start()
         {
             InitHealthValue(playerStatusGetter.Health().Value);
@@ -25,6 +30,10 @@ namespace ReGaSLZR.Dare.Stats
             playerStatusGetter.Health()
                 .Where(healthVal => healthVal > health.Value)
                 .Subscribe(healthVal => health.Value = healthVal)
+                .AddTo(disposables);
+
+            playerStatusGetter.Noise()
+                .Subscribe(noise => noiseMaker.SetNoise(noise))
                 .AddTo(disposables);
         }
 

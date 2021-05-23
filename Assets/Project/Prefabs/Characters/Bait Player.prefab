@@ -409,6 +409,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parent: {fileID: 752145113867266981}
   startingHealth: 5
+  noiseMaker: {fileID: 752145113506950527}
 --- !u!1001 &4125590678026120
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -489,6 +490,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4125590678026120}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &752145113506950527 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 756199898226531063, guid: 082e502a9cbd66448b912ef50f951bb4,
+    type: 3}
+  m_PrefabInstance: {fileID: 4125590678026120}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38544e4fb1e42f740a6d2572768838da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &752145111943477805
 PrefabInstance:
   m_ObjectHideFlags: 0

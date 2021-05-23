@@ -2143,11 +2143,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e20a9ec1e32c6840bdc7934c7234df5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  staminaCostSummonBait: 85
-  staminaRunTick: 0.025
-  staminaShieldTick: 0.05
-  staminaRefillTick: 0.15
   debugDamage: 25
+  staminaCosts: {fileID: 11400000, guid: 79e80c66f8454554786410f01bf0e0f3, type: 2}
+  noiseActions: {fileID: 11400000, guid: 2faf1762ec6ffbd4d934a0bdcba4a191, type: 2}
 --- !u!1 &2594030513372557357
 GameObject:
   m_ObjectHideFlags: 0
@@ -3133,7 +3131,7 @@ GameObject:
   - component: {fileID: 1837205748473490486}
   - component: {fileID: 2510017609020859581}
   m_Layer: 0
-  m_Name: Canvas y EventSystem
+  m_Name: CANVAS Y EVENTSYSTEM
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

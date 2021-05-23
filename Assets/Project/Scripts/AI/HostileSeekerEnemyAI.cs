@@ -14,7 +14,7 @@ namespace ReGaSLZR.Dare.AI
 
         [SerializeField]
         [Range(1, 100)]
-        private int damage;
+        private int damage = 50;
 
         protected override void OnEnable()
         {

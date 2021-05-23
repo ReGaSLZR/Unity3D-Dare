@@ -37,8 +37,8 @@ namespace ReGaSLZR.Dare.AI
         [Space]
 
         [SerializeField]
-        [Range(0f, 75f)]
-        protected float wanderRange = 50f;
+        [Range(0, 75)]
+        protected int wanderRange = 50;
 
         [SerializeField]
         [Range(3, 10)]
@@ -83,7 +83,13 @@ namespace ReGaSLZR.Dare.AI
                 .Where(_ => noiseDetector.HasCollision().Value
                     && !skillUseOnRangeDetector.HasCollision().Value)
                 .Select(_ => chaseTargetDetector.HasCollision().Value)
-                .Subscribe(hasChaseTarget => movement.OnMove(hasChaseTarget))
+                .Subscribe(hasChaseTarget => {
+                    target.position = hasChaseTarget ? 
+                        chaseTargetDetector.CollidedObjectPosition : 
+                        noiseDetector.CollidedObjectPosition;
+                    movement.SetTargetPosition(target.position);
+                    movement.OnMove(hasChaseTarget);
+                })
                 .AddTo(disposableMovement);
 
             //Skill target met!  -> Stop movement, start continuously using skill!
@@ -111,6 +117,11 @@ namespace ReGaSLZR.Dare.AI
 
         private void SetDestination()
         {
+            if (!movement.HasReachedTarget())
+            {
+                return;
+            }
+
             var isNoiseDetected = noiseDetector.HasCollision().Value;
             isWandering = !isNoiseDetected;
 

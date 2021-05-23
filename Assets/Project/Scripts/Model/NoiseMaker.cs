@@ -4,6 +4,7 @@ namespace ReGaSLZR.Dare.Model
     using NaughtyAttributes;
     using UnityEngine;
 
+    [RequireComponent(typeof(Animation))]
     [RequireComponent(typeof(SphereCollider))]
     public class NoiseMaker : MonoBehaviour
     {
@@ -18,16 +19,19 @@ namespace ReGaSLZR.Dare.Model
 
         #endregion
 
+        private new Animation animation;
         private SphereCollider sphereCollider;
 
         private void Awake()
         {
+            animation = GetComponent<Animation>();
             sphereCollider = GetComponent<SphereCollider>();
             this.tag = tagCustom;
         }
 
         public void SetNoise(int value)
         {
+            animation.Play();
             sphereCollider.radius = value;
         }
         

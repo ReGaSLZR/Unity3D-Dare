@@ -71,6 +71,11 @@ namespace ReGaSLZR.Dare.Movement
             rigidbody.velocity = Vector3.zero;
         }
 
+        public bool IsRunning(bool hasStamina, float vert)
+        {
+            return Input.GetButton(inputRun) && hasStamina && (vert > 0);
+        }
+
         /// <summary>
         /// Parts of this were taken from Brackey's tutorial:
         /// https://www.youtube.com/watch?v=4HpC--2iowE
@@ -84,7 +89,7 @@ namespace ReGaSLZR.Dare.Movement
         {
             float hori = Input.GetAxisRaw(inputMoveHorizontal);
             float vert = Input.GetAxisRaw(inputMoveVertical);
-            bool isRunning = Input.GetButton(inputRun) && hasStamina && (vert > 0);
+            bool isRunning = IsRunning(hasStamina, vert);
 
             if (isCrouching && isRunning)
             {

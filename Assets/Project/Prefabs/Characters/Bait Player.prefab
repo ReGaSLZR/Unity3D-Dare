@@ -369,11 +369,9 @@ MonoBehaviour:
   groundDetector: {fileID: 0}
   skillMain: {fileID: 6216973748013269125}
   stats: {fileID: 774652115864227494}
-  parent: {fileID: 752145113867266981}
   durationLifetime: 5.5
   durationEntrance: 1.5
   durationExit: 0.6
-  baitModel: {fileID: 482252600702584700}
   baitFXEntrance: {fileID: 752145113665807877}
   baitFXExit: {fileID: 752145113572773229}
   animEntrance: {fileID: 1589717469}
@@ -455,8 +453,9 @@ MonoBehaviour:
   animator: {fileID: 6564755495510296508}
   animTrigger: danceVariant
   delayOnActivate: 1
-  effectsObj: []
-  animIdleVarValues: {x: 0, y: 2}
+  effectsObj:
+  - {fileID: 752145113506950525}
+  animVariation: {x: 0, y: 2}
   noiseMaker: {fileID: 752145113506950527}
   noiseType: 0
 --- !u!1001 &4125590678026120
@@ -533,6 +532,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 082e502a9cbd66448b912ef50f951bb4, type: 3}
+--- !u!1 &752145113506950525 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 756199898226531061, guid: 082e502a9cbd66448b912ef50f951bb4,
+    type: 3}
+  m_PrefabInstance: {fileID: 4125590678026120}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &752145113506950526 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 756199898226531062, guid: 082e502a9cbd66448b912ef50f951bb4,
@@ -545,7 +550,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 4125590678026120}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 752145113506950525}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 38544e4fb1e42f740a6d2572768838da, type: 3}
@@ -655,12 +660,6 @@ Animator:
 --- !u!4 &1007291756281241030 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 627644f0a54ccab448aa09084af1baf4,
-    type: 3}
-  m_PrefabInstance: {fileID: 752145111943477805}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &482252600702584700 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 627644f0a54ccab448aa09084af1baf4,
     type: 3}
   m_PrefabInstance: {fileID: 752145111943477805}
   m_PrefabAsset: {fileID: 0}

@@ -29,10 +29,6 @@ namespace ReGaSLZR.Dare.AI
 
         [SerializeField]
         [Required]
-        private GameObject baitModel;
-
-        [SerializeField]
-        [Required]
         private GameObject baitFXEntrance;
 
         [SerializeField]
@@ -64,9 +60,7 @@ namespace ReGaSLZR.Dare.AI
 
         private void ConfigActiveElements(bool isEntering)
         {
-            baitModel.SetActive(isEntering);
             baitFXEntrance.SetActive(isEntering);
-
             baitFXExit.SetActive(!isEntering);
 
             if (isEntering)

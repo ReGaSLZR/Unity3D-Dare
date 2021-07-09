@@ -16,7 +16,7 @@ namespace ReGaSLZR.Dare.Skill
 
         [SerializeField]
         [MinMaxSlider(0, 5)]
-        private Vector2 animIdleVarValues;
+        private Vector2 animVariation;
 
         [Space]
 
@@ -34,9 +34,10 @@ namespace ReGaSLZR.Dare.Skill
         public override bool Execute(bool trigger = false)
         {
             int idleVariation = Random.Range(
-                (int)animIdleVarValues.x, (int)animIdleVarValues.y + 1);
+                (int)animVariation.x, (int)animVariation.y + 1);
 
             animator.SetInteger(animTrigger, idleVariation);
+            SetFXActive(true);
 
             noiseMaker.SetNoise(playerStats
                 .GetNoiseActions().GetOtherNoise(noiseType));

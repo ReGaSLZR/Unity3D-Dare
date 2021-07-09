@@ -56,7 +56,7 @@ namespace ReGaSLZR.Dare.AI
 
         protected virtual void OnHealthDepletion()
         {
-            movement.OnStagger(true);
+            movement?.OnStagger(true);
             enabled = false;
         }
 

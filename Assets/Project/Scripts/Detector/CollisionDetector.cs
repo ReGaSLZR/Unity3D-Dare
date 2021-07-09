@@ -69,7 +69,9 @@ namespace ReGaSLZR.Dare.Detector
             //If the CollidedObject is disabled while hasCollision == true, revert to false
             Observable.Interval(System.TimeSpan.FromSeconds(5))
                 .Where(_ => hasCollision.Value)
-                .Subscribe(_ => hasCollision.Value = (CollidedObject != null) ? CollidedObject.activeInHierarchy : hasCollision.Value)
+                .Where(_ => (CollidedObject == null) || 
+                    !CollidedObject.activeInHierarchy)
+                .Subscribe(_ => RemoveCollisionData())
                 .AddTo(disposable);
         }
 

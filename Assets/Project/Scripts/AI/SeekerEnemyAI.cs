@@ -77,6 +77,19 @@ namespace ReGaSLZR.Dare.AI
                 })
                 .AddTo(disposableMovement);
 
+            //Upon losing the noise origin, and having 
+            //NO detected chase and skill targets -> 
+            Observable.Interval(System.TimeSpan.FromSeconds(1))
+                .Where(_ => !isWandering)
+                .Where(_ => !noiseDetector.HasCollision().Value)
+                .Where(_ => !chaseTargetDetector.HasCollision().Value)
+                .Where(_ => !skillUseOnRangeDetector.HasCollision().Value)
+                .Subscribe(_ => {
+                    StopAllCoroutines();
+                    ForceSetWandering();
+                })
+                .AddTo(disposableMovement);
+
             //Has detected noise; no current Attack target
             //Move to noise origin; speed depends on whether has Chase target
             this.UpdateAsObservable()
@@ -115,14 +128,22 @@ namespace ReGaSLZR.Dare.AI
 
         #region Class Implementation
 
+        private void ForceSetWandering()
+        {
+            isWandering = true;
+            target.position = GetWanderTarget();
+            movement.SetTargetPosition(target.position);
+        }
+
         private void SetDestination()
         {
+            var isNoiseDetected = noiseDetector.HasCollision().Value;
+
             if (!movement.HasReachedTarget())
             {
                 return;
             }
-
-            var isNoiseDetected = noiseDetector.HasCollision().Value;
+            
             isWandering = !isNoiseDetected;
 
             target.position = isNoiseDetected ?

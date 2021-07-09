@@ -1409,10 +1409,5 @@ PrefabInstance:
       propertyPath: m_Name
       value: PLAYER Y CAMERAS
       objectReference: {fileID: 0}
-    - target: {fileID: 9045566496896627864, guid: 5c1a67b53edd7bf4d843f2ad8516d3a4,
-        type: 3}
-      propertyPath: m_Radius
-      value: 5
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5c1a67b53edd7bf4d843f2ad8516d3a4, type: 3}

@@ -1,22 +1,19 @@
 namespace ReGaSLZR.Dare.Stats
 {
 
-    using Dare.Model;
-
     using UnityEngine;
 
     public class NoiseBaitStats : BaseStats
     {
 
         [SerializeField]
-        private NoiseMaker noiseMaker;
+        [Range(0, 100)]
+        protected int startingHealth;
 
         private void OnEnable()
         {
+            parent.SetActive(true);
             InitHealthValue(startingHealth);
-
-            //TODO set noiseMaker level from upgrades
-            //noiseMaker.SetNoise(val);
         }
 
     }

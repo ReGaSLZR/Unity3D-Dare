@@ -12,10 +12,6 @@ namespace ReGaSLZR.Dare.Stats
         [Required]
         protected GameObject parent;
 
-        [SerializeField]
-        [Range(0, 100)]
-        protected int startingHealth;
-
         protected ReactiveProperty<int> health = new ReactiveProperty<int>(100);
         protected CompositeDisposable disposables = new CompositeDisposable();
 
@@ -44,6 +40,11 @@ namespace ReGaSLZR.Dare.Stats
         public virtual void InitHealthValue(int health)
         {
             this.health.Value = health;
+        }
+
+        public void DisableParentGameObject()
+        {
+            parent.SetActive(false);
         }
 
     }

@@ -49,6 +49,11 @@ PrefabInstance:
       propertyPath: noiseDetector
       value: 
       objectReference: {fileID: 8038172799231526318}
+    - target: {fileID: 919132149132334991, guid: 5fe5ff4b36c8d6644947b44926aef0b4,
+        type: 3}
+      propertyPath: m_StoppingDistance
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 4737112601952029507, guid: 5fe5ff4b36c8d6644947b44926aef0b4,
         type: 3}
       propertyPath: m_RootOrder

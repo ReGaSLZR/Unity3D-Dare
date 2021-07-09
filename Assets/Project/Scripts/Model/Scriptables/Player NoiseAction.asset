@@ -13,7 +13,10 @@ MonoBehaviour:
   m_Name: Player NoiseAction
   m_EditorClassIdentifier: 
   crouchIdle: 0
-  standingIdle: 5
-  crouchWalk: 10
-  walk: 30
-  run: 75
+  standingIdle: 3
+  crouchWalk: 5
+  walk: 20
+  run: 60
+  bait: 75
+  enemyMinion: 35
+  environmentTrap: 25

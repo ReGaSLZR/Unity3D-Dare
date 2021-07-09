@@ -49,22 +49,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!111 &6564890267516120454
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9045566496896627941}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: 21c138b0ebaa8f341bdbce2256e0e4c9, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: 21c138b0ebaa8f341bdbce2256e0e4c9, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 0
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!1001 &2152815640098756701
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -205,7 +189,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1280348697, guid: 2e6e25aab838c4f47b324804c661aa86, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.014471105
+      value: -0.014471103
       objectReference: {fileID: 0}
     - target: {fileID: 1280348697, guid: 2e6e25aab838c4f47b324804c661aa86, type: 3}
       propertyPath: m_LocalRotation.y
@@ -213,7 +197,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1280348697, guid: 2e6e25aab838c4f47b324804c661aa86, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.008781046
+      value: 0.008781045
       objectReference: {fileID: 0}
     - target: {fileID: 1535111279, guid: 2e6e25aab838c4f47b324804c661aa86, type: 3}
       propertyPath: m_Follow
@@ -587,12 +571,6 @@ GameObject:
 --- !u!4 &9045566496935817790 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 752145113867266982, guid: f12c87cf57f613e418424bd2971b721d,
-    type: 3}
-  m_PrefabInstance: {fileID: 8644775153736227224}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &9045566496896627941 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 752145113506950525, guid: f12c87cf57f613e418424bd2971b721d,
     type: 3}
   m_PrefabInstance: {fileID: 8644775153736227224}
   m_PrefabAsset: {fileID: 0}

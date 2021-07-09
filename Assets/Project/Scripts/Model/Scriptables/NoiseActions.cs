@@ -7,6 +7,8 @@ namespace ReGaSLZR.Dare.Model
     public class NoiseActions : ScriptableObject
     {
 
+        [Header("Player Noise Actions")]
+
         [SerializeField]
         [Range(0, 100)]
         private int crouchIdle = 0;
@@ -31,6 +33,41 @@ namespace ReGaSLZR.Dare.Model
         [Range(0, 100)]
         private int run = 75;
         public int Run { get { return run; } }
+
+        [Header("Other Noise Sources")]
+
+        [SerializeField]
+        [Range(0, 100)]
+        private int bait = 75;
+
+        [SerializeField]
+        [Range(0, 100)]
+        private int enemyMinion = 75;
+
+        [SerializeField]
+        [Range(0, 100)]
+        private int environmentTrap = 25;
+
+        public int GetOtherNoise(NoiseType noiseType)
+        {
+            switch (noiseType)
+            {
+                case NoiseType.Bait:
+                    {
+                        return bait;
+                    }
+                case NoiseType.EnemyMinion:
+                    {
+                        return enemyMinion;
+                    }
+                default:
+                case NoiseType.EnvironmentTrap:
+                    {
+                        return environmentTrap;
+                    }
+            }
+        }
+
     }
 
 }

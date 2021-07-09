@@ -13,10 +13,6 @@ namespace ReGaSLZR.Dare.AI
         #region Inspector Variables
 
         [SerializeField]
-        [Required]
-        private GameObject parent;
-
-        [SerializeField]
         [Range(1f, 15f)]
         private float durationLifetime = 7f;
 
@@ -47,19 +43,7 @@ namespace ReGaSLZR.Dare.AI
 
         [SerializeField]
         [Required]
-        private Animation animEntrace;
-
-        [SerializeField]
-        [Required]
-        private Animator animator;
-
-        [SerializeField]
-        [AnimatorParam("animator")]
-        private string animParamIntIdleVar;
-
-        [SerializeField]
-        [MinMaxSlider(0, 5)]
-        private Vector2 animIdleVarValues;
+        private Animation animEntrance;
 
         #endregion
 
@@ -69,16 +53,11 @@ namespace ReGaSLZR.Dare.AI
         {
             base.OnEnable();
 
-            parent.SetActive(true);
             ConfigActiveElements(true);
             StopAllCoroutines();
-
-            int idleVariation = Random.Range(
-                (int)animIdleVarValues.x, (int)animIdleVarValues.y + 1);
-
-            animator.SetInteger(animParamIntIdleVar, idleVariation);
-
             StartCoroutine(CorLifetimeCountdown());
+
+            skillMain.Execute();
         }
 
         #endregion
@@ -92,11 +71,11 @@ namespace ReGaSLZR.Dare.AI
 
             if (isEntering)
             {
-                animEntrace.Play();
+                animEntrance.Play();
             }
             else 
             {
-                animEntrace.Stop();
+                animEntrance.Stop();
             }
         }
 
@@ -105,7 +84,7 @@ namespace ReGaSLZR.Dare.AI
             yield return new WaitForSeconds(durationLifetime + durationEntrance);
             ConfigActiveElements(false);
             yield return new WaitForSeconds(durationExit);
-            parent.SetActive(false);
+            stats.DisableParentGameObject();
         }
 
     }

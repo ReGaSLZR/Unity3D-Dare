@@ -9,10 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7da6d044caa521f40a47c1122c38920e, type: 3}
-  m_Name: Player StaminaCosts
+  m_Script: {fileID: 11500000, guid: e39f2354feddc8048a48074ea96908f4, type: 3}
+  m_Name: NoiseActions
   m_EditorClassIdentifier: 
-  skillSummonBait: 85
-  runTick: 0.1
-  skillShieldTick: 0.05
-  refillTick: 0.15
+  crouchIdle: 0
+  standingIdle: 3
+  crouchWalk: 5
+  walk: 20
+  run: 60
+  bait: 75
+  enemyMinion: 35
+  environmentTrap: 25

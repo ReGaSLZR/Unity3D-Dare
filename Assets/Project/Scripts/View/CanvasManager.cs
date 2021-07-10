@@ -15,6 +15,7 @@ namespace ReGaSLZR.Dare.View
         private void Awake()
         {
             canvas.gameObject.SetActive(true);
+            Destroy(this);
         }
 
         #endregion

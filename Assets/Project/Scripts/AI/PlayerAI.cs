@@ -1,8 +1,9 @@
 namespace ReGaSLZR.Dare.AI
 {
+    using Dare.Model;
+    using Dare.Model.Player;
     using Dare.Movement;
     using Dare.Skill;
-    using Dare.Model.Player;
 
     using NaughtyAttributes;
     using UniRx;
@@ -15,15 +16,16 @@ namespace ReGaSLZR.Dare.AI
 
         [Inject]
         private IPlayerStatusGetter playerStatusGetter;
-
         [Inject]
         private IPlayerStatusSetter playerStatusSetter;
-
         [Inject]
         private IPlayerSkillGetter playerSkillGetter;
-
         [Inject]
         private IPlayerSkillSetter playerSkillSetter;
+        [Inject]
+        private readonly INoiseActionGetter noiseActions;
+        [Inject]
+        private readonly IStaminaCostsGetter staminaCosts;
 
         #region Inspector Variables
 
@@ -140,8 +142,8 @@ namespace ReGaSLZR.Dare.AI
                     playerStatusSetter.SetNoise(
                             !isCrouching,
                             isCrouching ? 
-                                playerStatusGetter.GetNoiseActions().CrouchIdle :
-                                playerStatusGetter.GetNoiseActions().StandingIdle,
+                                noiseActions.CrouchIdle() :
+                                noiseActions.StandingIdle(),
                             isCrouching);
                 })
                 .AddTo(disposableMovement);
@@ -153,15 +155,14 @@ namespace ReGaSLZR.Dare.AI
                 .Subscribe(isMoving =>
                     playerStatusSetter.SetNoise(isMoving,
                         playerStatusGetter.IsCrouching().Value ?
-                        playerStatusGetter.GetNoiseActions().CrouchWalk :
-                        playerStatusGetter.GetNoiseActions().Walk))
+                        noiseActions.CrouchWalk() : noiseActions.Walk()))
                 .AddTo(disposableMovement);
 
             //Running
             playerStatusGetter.IsRunning()
                 .Subscribe(isRunning => 
                     playerStatusSetter.SetNoise(isRunning, 
-                        playerStatusGetter.GetNoiseActions().Run))
+                        noiseActions.Run()))
                 .AddTo(disposableMovement);
         }
 
@@ -171,7 +172,7 @@ namespace ReGaSLZR.Dare.AI
             this.UpdateAsObservable()
                 .Where(_ => Input.GetButton(skillSub.GetSkillButton()))
                 .Where(_ => playerStatusGetter.Stamina().Value >=
-                    playerSkillGetter.GetStaminaCostSummonBait())
+                    staminaCosts.SkillSummonBait())
                 .Subscribe(_ => skillSub.Aim())
                 .AddTo(disposableSkill);
 
@@ -179,14 +180,14 @@ namespace ReGaSLZR.Dare.AI
             this.UpdateAsObservable()
                .Where(_ => Input.GetButtonUp(skillSub.GetSkillButton()))
                .Where(_ => playerStatusGetter.Stamina().Value >=
-                    playerSkillGetter.GetStaminaCostSummonBait())
+                    staminaCosts.SkillSummonBait())
                .Subscribe(_ =>
                {
                    var isComplete = skillSub.Execute();
                    if (isComplete)
                    {
                        playerStatusSetter.CostStamina(
-                            playerSkillGetter.GetStaminaCostSummonBait());
+                            staminaCosts.SkillSummonBait());
                    }
                })
                .AddTo(disposableSkill);

@@ -1,4 +1,4 @@
-namespace ReGaSLZR.Dare.Model
+namespace ReGaSLZR.Dare.Enum
 {
 
     public enum NoiseType

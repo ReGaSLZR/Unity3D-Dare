@@ -1,10 +1,29 @@
 namespace ReGaSLZR.Dare.Model
 {
+    
+    using Enum;
 
     using UnityEngine;
+    using Zenject;
+
+    public interface INoiseActionSetter
+    { 
+        //TODO
+    }
+
+    public interface INoiseActionGetter
+    {
+        public int CrouchIdle();
+        public int StandingIdle();
+        public int CrouchWalk();
+        public int Walk();
+        public int Run();
+        public int OtherNoise(NoiseType noiseType);
+    }
 
     [CreateAssetMenu(menuName = "Dare/Noise Actions", fileName = "New NoiseActions")]
-    public class NoiseActions : ScriptableObject
+    public class NoiseActionsModel : ScriptableObjectInstaller<NoiseActionsModel>,
+        INoiseActionGetter, INoiseActionSetter
     {
 
         [Header("Player Noise Actions")]
@@ -12,27 +31,22 @@ namespace ReGaSLZR.Dare.Model
         [SerializeField]
         [Range(0, 100)]
         private int crouchIdle = 0;
-        public int CrouchIdle { get { return crouchIdle; }  }
 
         [SerializeField]
         [Range(0, 100)]
         private int standingIdle = 5;
-        public int StandingIdle { get { return standingIdle; } }
 
         [SerializeField]
         [Range(0, 100)]
         private int crouchWalk = 10;
-        public int CrouchWalk { get { return crouchWalk; }  }
 
         [SerializeField]
         [Range(0, 100)]
         private int walk = 30;
-        public int Walk { get { return walk; }  }
 
         [SerializeField]
         [Range(0, 100)]
         private int run = 75;
-        public int Run { get { return run; } }
 
         [Header("Other Noise Sources")]
 
@@ -48,7 +62,39 @@ namespace ReGaSLZR.Dare.Model
         [Range(0, 100)]
         private int environmentTrap = 25;
 
-        public int GetOtherNoise(NoiseType noiseType)
+        public override void InstallBindings()
+        {
+            Container.Bind<INoiseActionGetter>().FromInstance(this);
+            Container.Bind<INoiseActionSetter>().FromInstance(this);
+        }
+
+        #region Getter Implementation
+
+        public int StandingIdle()
+        {
+            return standingIdle;
+        }
+        public int CrouchIdle()
+        {
+            return crouchIdle;
+        }
+
+        public int CrouchWalk()
+        {
+            return crouchWalk;
+        }
+
+        public int Walk()
+        {
+            return walk;
+        }
+
+        public int Run()
+        {
+            return run;
+        }
+
+        public int OtherNoise(NoiseType noiseType)
         {
             switch (noiseType)
             {
@@ -67,6 +113,8 @@ namespace ReGaSLZR.Dare.Model
                     }
             }
         }
+
+        #endregion
 
     }
 

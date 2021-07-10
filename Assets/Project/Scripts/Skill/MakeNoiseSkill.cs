@@ -1,9 +1,10 @@
 namespace ReGaSLZR.Dare.Skill
 {
 
+    using Enum;
+    using Misc;
     using Model;
-    using Model.Player;
-
+    
     using NaughtyAttributes;
     using UnityEngine;
     using Zenject;
@@ -12,7 +13,7 @@ namespace ReGaSLZR.Dare.Skill
     {
 
         [Inject]
-        private readonly IPlayerStatusGetter playerStats;
+        private readonly INoiseActionGetter noiseActions;
 
         [SerializeField]
         [MinMaxSlider(0, 5)]
@@ -39,8 +40,7 @@ namespace ReGaSLZR.Dare.Skill
             animator.SetInteger(animTrigger, idleVariation);
             SetFXActive(true);
 
-            noiseMaker.SetNoise(playerStats
-                .GetNoiseActions().GetOtherNoise(noiseType));
+            noiseMaker.SetNoise(noiseActions.OtherNoise(noiseType));
 
             return true;
         }

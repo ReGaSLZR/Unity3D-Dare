@@ -1,21 +1,21 @@
 namespace ReGaSLZR.Dare.Model.Player
 {
 
-    using NaughtyAttributes;
     using UniRx;
     using UnityEngine;
+    using Zenject;
 
     #region Interfaces
 
     public interface IPlayerSkillGetter
     {
         public IReadOnlyReactiveProperty<bool> IsShielding();
-        public int GetStaminaCostSummonBait();
     }
 
     public interface IPlayerSkillSetter
     {
         public void ToggleShielding();
+        public void ForceShieldOff();
     }
 
     public interface IPlayerStatusGetter
@@ -25,7 +25,6 @@ namespace ReGaSLZR.Dare.Model.Player
         public int GetMaxStamina();
         public int GetMaxNoise();
         public int GetCriticalStamina();
-        public NoiseActions GetNoiseActions();
         public IReadOnlyReactiveProperty<int> Health();
         public IReadOnlyReactiveProperty<int> Stamina();
         public IReadOnlyReactiveProperty<int> Noise();
@@ -48,37 +47,25 @@ namespace ReGaSLZR.Dare.Model.Player
         public void SetIsRunning(bool isRunning);
         public void SetIsOnGround(bool isOnGround);
         public void ToggleIsCrouching();
+        public void ForceCrouchOff();
         public void Damage(int damage);
         public void CostStamina(int cost);
+        public void DecreaseStaminaBy1();
+        public void IncreaseStaminaBy1();
         public void SetNoise(bool isAdd, int value, bool isForced = false);
+        public void SetToMaxStamina();
+        public void SetToMaxHealth();
 
     }
 
     #endregion
 
-    public class PlayerStatus : MonoBehaviour,
+    public class PlayerStatusModel : MonoInstaller,
         IPlayerStatusGetter, IPlayerStatusSetter,
         IPlayerSkillGetter, IPlayerSkillSetter
     {
 
-        #region Inspector Variables
-
-        [SerializeField]
-        private int debugDamage = 25;
-
-        [SerializeField]
-        [Expandable]
-        private StaminaCosts staminaCosts;
-
-        [SerializeField]
-        [Expandable]
-        private NoiseActions noiseActions;
-
-        #endregion
-
         #region Private Variables
-
-        private readonly CompositeDisposable disposables = new CompositeDisposable();
 
         private const int MAX_HEALTH = 100;
         private const int MAX_STAMINA = 100;
@@ -103,89 +90,13 @@ namespace ReGaSLZR.Dare.Model.Player
 
         #endregion
 
-        #region Unity Callbacks
-
-        private void OnEnable()
+        public override void InstallBindings()
         {
-            RegisterDisposables();
+            Container.Bind<IPlayerStatusGetter>().FromInstance(this);
+            Container.Bind<IPlayerStatusSetter>().FromInstance(this);
+            Container.Bind<IPlayerSkillGetter>().FromInstance(this);
+            Container.Bind<IPlayerSkillSetter>().FromInstance(this);
         }
-
-        private void OnDisable()
-        {
-            disposables.Clear();
-        }
-
-        private void Start()
-        {
-            isShielding.SetValueAndForceNotify(false);
-        }
-
-        #endregion
-
-        #region Class Implementation
-
-        private void RegisterDisposables()
-        {
-            statStamina.Select(_ => statStamina.Value)
-                    .Where(val => val <= 0)
-                    .Subscribe(_ =>
-                    {
-                        isRunning.SetValueAndForceNotify(false);
-                        isShielding.SetValueAndForceNotify(false);
-                        isCrouching.SetValueAndForceNotify(false);
-                    })
-                   .AddTo(disposables);
-
-            Observable.Interval(System.TimeSpan.FromSeconds(staminaCosts.runTick))
-                .Where(_ => isRunning.Value && (statStamina.Value > 0))
-                .Subscribe(_ =>
-                {
-                    statStamina.Value--;
-                })
-                .AddTo(disposables);
-
-            Observable.Interval(System.TimeSpan.FromSeconds(staminaCosts.skillShieldTick))
-                .Where(_ => isShielding.Value && (statStamina.Value > 0))
-                .Subscribe(_ =>
-                {
-                    statStamina.Value--;
-                })
-                .AddTo(disposables);
-
-            Observable.Interval(System.TimeSpan.FromSeconds(staminaCosts.refillTick))
-                .Where(_ => !isRunning.Value && (statStamina.Value < MAX_STAMINA))
-                .Subscribe(_ =>
-                {
-                    statStamina.Value++;
-                })
-                .AddTo(disposables);
-        }
-
-        [Button]
-        public void ResetDisposables()
-        {
-            disposables.Clear();
-            RegisterDisposables();
-
-            statStamina.Value = MAX_STAMINA;
-            statHealth.Value = MAX_HEALTH;
-            statNoise.Value = 0;
-        }
-
-        [Button]
-        private void TestDamage()
-        {
-            Damage(debugDamage);
-        }
-
-        [Button]
-        private void ResetHealthAndStamina()
-        {
-            statHealth.Value = MAX_HEALTH;
-            statStamina.Value = MAX_STAMINA;
-        }
-
-        #endregion
 
         #region Skill Setter Interface Implementation
 
@@ -193,6 +104,11 @@ namespace ReGaSLZR.Dare.Model.Player
         {
             isShielding.Value = !isShielding.Value;
             CostStamina(0);
+        }
+
+        public void ForceShieldOff()
+        {
+            isShielding.SetValueAndForceNotify(false);
         }
 
         #endregion
@@ -219,6 +135,11 @@ namespace ReGaSLZR.Dare.Model.Player
             isCrouching.Value = !isCrouching.Value;
         }
 
+        public void ForceCrouchOff()
+        {
+            isCrouching.SetValueAndForceNotify(false);
+        }
+
         public void Damage(int damage)
         {
             if (isShielding.Value)
@@ -242,11 +163,31 @@ namespace ReGaSLZR.Dare.Model.Player
             isCrouching.Value = false;
         }
 
+        public void DecreaseStaminaBy1()
+        {
+            statStamina.Value--;
+        }
+
+        public void IncreaseStaminaBy1()
+        {
+            statStamina.Value++;
+        }
+
         public void SetNoise(bool isAdd, int value, bool isForced = false)
         {
             int val = isForced ? value 
                 : (statNoise.Value + (isAdd ? value : -value));
             statNoise.Value = Mathf.Clamp(val, 0, MAX_NOISE);
+        }
+
+        public void SetToMaxStamina()
+        {
+            statStamina.SetValueAndForceNotify(MAX_STAMINA);
+        }
+
+        public void SetToMaxHealth()
+        {
+            statHealth.SetValueAndForceNotify(MAX_HEALTH);
         }
 
         #endregion
@@ -256,11 +197,6 @@ namespace ReGaSLZR.Dare.Model.Player
         public IReadOnlyReactiveProperty<bool> IsShielding()
         {
             return isShielding;
-        }
-
-        public int GetStaminaCostSummonBait()
-        {
-            return staminaCosts.skillSummonBait;
         }
 
         #endregion
@@ -325,11 +261,6 @@ namespace ReGaSLZR.Dare.Model.Player
         public int GetCriticalStamina()
         {
             return MAX_STAMINA / 10;
-        }
-
-        public NoiseActions GetNoiseActions()
-        {
-            return noiseActions;
         }
 
         #endregion

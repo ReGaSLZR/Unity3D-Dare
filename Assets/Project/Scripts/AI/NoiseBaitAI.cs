@@ -6,6 +6,7 @@ namespace ReGaSLZR.Dare.AI
     using NaughtyAttributes;
     using System.Collections;
     using UnityEngine;
+    using UniRx;
 
     public class NoiseBaitAI : BaseAI<BaseMovement>
     {
@@ -56,6 +57,12 @@ namespace ReGaSLZR.Dare.AI
             skillMain.Execute();
         }
 
+        protected override void OnDisable()
+        {
+            StopAllCoroutines();
+            base.OnDisable();
+        }
+
         #endregion
 
         private void ConfigActiveElements(bool isEntering)
@@ -73,12 +80,29 @@ namespace ReGaSLZR.Dare.AI
             }
         }
 
+        protected override void OnHealthDepletion()
+        {
+            StartCoroutine(CorOnHealthDepletion());
+        }
+
+        private IEnumerator CorOnHealthDepletion()
+        {
+            yield return new WaitForSeconds(1);
+            if (stats.Health().Value <= 0)
+            { 
+                base.OnHealthDepletion();
+            }
+        }
+
         private IEnumerator CorLifetimeCountdown()
         {
+            Debug.Log($"REN CorLifetimeCountdown() : started {durationLifetime + durationEntrance}");
             yield return new WaitForSeconds(durationLifetime + durationEntrance);
             ConfigActiveElements(false);
+            Debug.Log($"REN CorLifetimeCountdown() : exiting...");
             yield return new WaitForSeconds(durationExit);
             stats.DisableParentGameObject();
+            Debug.Log($"REN CorLifetimeCountdown() : finished");
         }
 
     }

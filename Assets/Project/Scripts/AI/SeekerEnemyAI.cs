@@ -1,14 +1,16 @@
 namespace ReGaSLZR.Dare.AI
 {
 
-    using Dare.Detector;
-    using Dare.Movement;
+    using Detector;
+    using Model;
+    using Movement;
 
     using NaughtyAttributes;
     using System.Collections;
     using UniRx;
     using UniRx.Triggers;
     using UnityEngine;
+    using Zenject;
 
     public class SeekerEnemyAI : BaseAI<TargetedMovement>
     {

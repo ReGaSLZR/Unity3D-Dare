@@ -49,6 +49,11 @@ namespace ReGaSLZR.Dare.Model
 
         #region Class Implementation
 
+        private void Awake()
+        {
+            roundState.SetValueAndForceNotify(Enum.RoundState.NotStarted);
+        }
+
         private void OnEnable()
         {
             Observable.Interval(TICK)

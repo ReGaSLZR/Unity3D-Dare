@@ -1,12 +1,22 @@
 namespace ReGaSLZR.Dare.Stats
 {
 
+    using Enum;
+    using Model;
+
     using NaughtyAttributes;
     using UniRx;
     using UnityEngine;
+    using Zenject;
 
     public class BaseStats : MonoBehaviour
     {
+
+        [Inject]
+        private readonly IRoundTimerGetter roundTimer;
+
+        [SerializeField]
+        protected bool isDisabledOnRoundFinish;
 
         [SerializeField]
         [Required]
@@ -20,6 +30,22 @@ namespace ReGaSLZR.Dare.Stats
             health.Where(healthVal => healthVal <= 0)
                 .Subscribe(_ => parent.SetActive(false))
                 .AddTo(disposables);
+
+            if (isDisabledOnRoundFinish)
+            {
+                roundTimer.RoundState()
+                    .Subscribe(state =>
+                    {
+                        if (RoundState.Finished == state)
+                        {
+                            parent.SetActive(false);
+                        }
+                        else if(RoundState.CountdownToStart == state) 
+                        {
+                            parent.SetActive(true);
+                        }
+                    }).AddTo(disposables);
+            }
         }
 
         protected virtual void OnDestroy()

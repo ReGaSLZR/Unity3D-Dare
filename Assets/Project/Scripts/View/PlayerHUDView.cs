@@ -1,6 +1,7 @@
 namespace ReGaSLZR.Dare.View
 {
 
+    using Dare.Model;
     using Dare.Model.Player;
 
     using NaughtyAttributes;
@@ -8,15 +9,18 @@ namespace ReGaSLZR.Dare.View
     using UniRx;
     using UnityEngine;
     using UnityEngine.UI;
+    using TMPro;
     using Zenject;
 
-    public class PlayerUIView : MonoBehaviour
+    public class PlayerHUDView : MonoBehaviour
     {
 
         #region Private Variables
 
         [Inject]
-        private IPlayerStatusGetter playerStatus;
+        private readonly IPlayerStatusGetter playerStatus;
+        [Inject]
+        private readonly IRoundTimerGetter roundTimer;
 
         private CompositeDisposable disposables = new CompositeDisposable();
 
@@ -37,6 +41,20 @@ namespace ReGaSLZR.Dare.View
         [SerializeField]
         [Required]
         private Slider sliderNoise;
+
+        [Header("Texts")]
+
+        [SerializeField]
+        [Required]
+        private TextMeshProUGUI textRoundCountdown;
+
+        [SerializeField]
+        [Required]
+        private TextMeshProUGUI textRoundState;
+
+        [SerializeField]
+        [Required]
+        private TextMeshProUGUI textRoundNumber;
 
         [Header("Overlays")]
 
@@ -75,11 +93,21 @@ namespace ReGaSLZR.Dare.View
 
         private void OnEnable()
         {
-            playerStatus.IsCrouching()
-                .Subscribe(isCrouching =>
-                    overlayOnCrouch.CrossFadeAlpha(
-                        isCrouching ? 1f : 0f, durationCrouchOverlay, false))
+            //Texts
+
+            roundTimer.RoundState()
+                .Subscribe(state => textRoundState.text = state.ToString())
+                .AddTo(disposables); //TODO remove this
+
+            roundTimer.Countdown()
+                .Subscribe(countdown => textRoundCountdown.text = countdown.ToString())
                 .AddTo(disposables);
+
+            roundTimer.RoundNumber()
+                .Subscribe(num => textRoundNumber.text = num.ToString())
+                .AddTo(disposables);
+
+            //Sliders
 
             playerStatus.Health()
                 .Subscribe(health => sliderHealth.value = health)
@@ -93,6 +121,14 @@ namespace ReGaSLZR.Dare.View
                 .Subscribe(noise => sliderNoise.value = noise)
                 .AddTo(disposables);
 
+            //Overlays
+
+            playerStatus.IsCrouching()
+                .Subscribe(isCrouching =>
+                    overlayOnCrouch.CrossFadeAlpha(
+                        isCrouching ? 1f : 0f, durationCrouchOverlay, false))
+                .AddTo(disposables);
+
             playerStatus.OnTakeDamage()
                 .Where(hasTakenDamage => hasTakenDamage)
                 .Subscribe(_ => StartCoroutine(CorOnHealthDecrease()))
@@ -102,13 +138,16 @@ namespace ReGaSLZR.Dare.View
                 .Where(health => health <= 0)
                 .Subscribe(_ => StartCoroutine(CorOnHealthDecrease()))
                 .AddTo(disposables);
-
-            ResetOverlaysAlpha();
         }
 
         private void OnDisable()
         {
             disposables.Clear();
+        }
+
+        private void Start()
+        {
+            ResetOverlaysAlpha();
         }
 
         #endregion

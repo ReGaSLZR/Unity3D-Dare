@@ -16,6 +16,16 @@ namespace ReGaSLZR.Dare.Presenter
         [Inject]
         private readonly IRoundSettingsGetter roundSettingsGetter;
 
+        #region Unity Callbacks
+
+        private void Start()
+        {
+            roundSetter.StartRound(
+                roundSettingsGetter.PreRoundCountdown(), 
+                roundSettingsGetter.RoundDuration());
+        }
+
+        #endregion
 
     }
 

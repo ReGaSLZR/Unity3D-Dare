@@ -96,13 +96,10 @@ namespace ReGaSLZR.Dare.AI
 
         private IEnumerator CorLifetimeCountdown()
         {
-            Debug.Log($"REN CorLifetimeCountdown() : started {durationLifetime + durationEntrance}");
             yield return new WaitForSeconds(durationLifetime + durationEntrance);
             ConfigActiveElements(false);
-            Debug.Log($"REN CorLifetimeCountdown() : exiting...");
             yield return new WaitForSeconds(durationExit);
             stats.DisableParentGameObject();
-            Debug.Log($"REN CorLifetimeCountdown() : finished");
         }
 
     }

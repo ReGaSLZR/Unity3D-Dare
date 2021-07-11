@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e39f2354feddc8048a48074ea96908f4, type: 3}
-  m_Name: NoiseActions
+  m_Name: Noise Actions
   m_EditorClassIdentifier: 
   crouchIdle: 0
   standingIdle: 3

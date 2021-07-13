@@ -1,4 +1,4 @@
-namespace ReGaSLZR.Dare.Model.Player
+namespace ReGaSLZR.Dare.Model
 {
 
     using UniRx;

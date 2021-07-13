@@ -2,7 +2,7 @@ namespace ReGaSLZR.Dare.Stats
 {
 
     using Dare.Misc;
-    using Dare.Model.Player;
+    using Dare.Model;
 
     using UnityEngine;
     using UniRx;

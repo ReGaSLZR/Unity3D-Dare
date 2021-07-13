@@ -2,7 +2,6 @@ namespace ReGaSLZR.Dare.Presenter
 {
 
     using Model;
-    using Model.Player;
 
     using NaughtyAttributes;
     using UniRx;

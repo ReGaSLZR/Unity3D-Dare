@@ -1,7 +1,6 @@
 namespace ReGaSLZR.Dare.AI
 {
     using Dare.Model;
-    using Dare.Model.Player;
     using Dare.Movement;
     using Dare.Skill;
 

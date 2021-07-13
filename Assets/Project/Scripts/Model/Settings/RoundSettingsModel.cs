@@ -13,6 +13,7 @@ namespace ReGaSLZR.Dare.Model
     {
         public int RoundDuration();
         public int PreRoundCountdown();
+        public int StartingRoundNumber();
     }
 
     [CreateAssetMenu(fileName = "New Round Settings", menuName = "Dare/Round Settings")]
@@ -30,6 +31,10 @@ namespace ReGaSLZR.Dare.Model
         [Range(3, 10)]
         private int preRoundCountdown = 3;
 
+        [SerializeField]
+        private int startingRoundNumber = 1;
+
+
         public override void InstallBindings()
         {
             Container.Bind<IRoundSettingsGetter>().FromInstance(this);
@@ -45,6 +50,11 @@ namespace ReGaSLZR.Dare.Model
         public int PreRoundCountdown()
         {
             return preRoundCountdown;
+        }
+
+        public int StartingRoundNumber()
+        {
+            return startingRoundNumber;
         }
 
         #endregion

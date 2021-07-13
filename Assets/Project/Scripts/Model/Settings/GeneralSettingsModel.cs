@@ -9,7 +9,6 @@ namespace ReGaSLZR.Dare.Model
     public interface IGeneralSettingsGetter
     {
         public LightingSetting StartingLightingSetting();
-        public int StartingRoundNumber();
     }
 
     [CreateAssetMenu(fileName = "New GeneralSettings", menuName = "Dare/General Settings")]
@@ -19,9 +18,6 @@ namespace ReGaSLZR.Dare.Model
 
         [SerializeField]
         private LightingSetting startingLightingSetting;
-
-        [SerializeField]
-        private int startingRoundNumber = 1;
 
         public override void InstallBindings()
         {
@@ -33,10 +29,6 @@ namespace ReGaSLZR.Dare.Model
         public LightingSetting StartingLightingSetting()
         {
             return startingLightingSetting;
-        }
-        public int StartingRoundNumber()
-        {
-            return startingRoundNumber;
         }
 
         #endregion
